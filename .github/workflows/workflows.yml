@@ -36,9 +36,9 @@ jobs:
         continue-on-error: true
         with:
           context: .
-          file: ./dockerfile
+          file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME}}/easy-redux:v2
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/easy-redux:v2
       
             
 
