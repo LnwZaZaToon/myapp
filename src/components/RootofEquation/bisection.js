@@ -11,7 +11,6 @@ function Bisection() {
   const [func, setfunc] = useState("4x-3");
   const [result, setResult] = useState(0);
   const [table, setTable] = useState([]);
-
   const Calculate = (e) => {
     e.preventDefault()
     let xl = parseFloat(xL);
