@@ -6,8 +6,8 @@ import {Line} from "react-chartjs-2";
 
 function Falseposition() {
   const [xL, setxL] = useState(0);
-  const [xR, setxR] = useState(0);
-  const [epsilon, setEpsilon] = useState(0.00001);
+  const [xR, setxR] = useState(5);
+  const [epsilon, setEpsilon] = useState(0.0001);
   const [func, setfunc] = useState("4x-3");
   const [result, setResult] = useState(0);
   const [table, setTable] = useState([]);
@@ -78,8 +78,8 @@ function Falseposition() {
   }
   const ResetNew = () =>{
     setxL(0);
-    setxR(0);
-    setEpsilon(0.00001);
+    setxR(5);
+    setEpsilon(0.0001);
     setfunc("4x-3");
     setResult(0);
     setTable([]);
@@ -87,7 +87,10 @@ function Falseposition() {
 
   return (
     <div>
+      <h1 className="form-title">False Position Method Calculator</h1>
       <form onSubmit={Calculate}>
+        <div className="formcontainer">
+       
         <div>
           <input type="string" value={func} step="any" id="func" placeholder="input function"  onChange={inputFunc} />
         </div>
@@ -103,6 +106,7 @@ function Falseposition() {
         <div className="ButtonCon">
           <button type="submit" className="calculate">Calculate</button>
           <button type="button" className="calculate" onClick={ResetNew}>Reset</button>
+        </div>
         </div>
         <h1>Answer: {result.toFixed(6)}</h1>
       </form>
