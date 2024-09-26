@@ -1,0 +1,39 @@
+/* Resetting margin and padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Ensuring the body or parent container takes up the full viewport */
+.container{
+    display: flex; /* Enable flexbox layout */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    height: 100%; /* Take up the full viewport height */
+    width: 100%; /* Take up the full viewport width */
+    margin-top: 150px;
+}
+
+
+.Out-Box {
+    border: 1px solid #dedede;
+    border-radius: 20px;
+    display: block;
+    font-size: 16px;
+    padding: 10px;
+    width: 800px; /* Fixed width or adjust as needed */
+    height: 300px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Optional: adds a subtle shadow */
+    background-color: #fff; /* Optional: background color for better visibility */
+ 
+}
+
+
+
+.Box-content {
+    text-align: center;
+    justify-content: center;
+    align-items: center;   
+    padding: 100px;
+}
