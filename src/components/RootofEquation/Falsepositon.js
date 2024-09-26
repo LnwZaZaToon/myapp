@@ -24,6 +24,9 @@ function Falseposition() {
     const Arraydata = []
     while (error > epsilon) {
       xold = xm
+      if(F(xl)*F(xr)>0){
+        break;
+      }
       xm = Formula(xl,xr)
       if (xm === 0) {
         break;
@@ -73,7 +76,14 @@ function Falseposition() {
     console.log(e.target.value)
     setfunc(e.target.value);
   }
-
+  const ResetNew = () =>{
+    setxL(0);
+    setxR(0);
+    setEpsilon(0.00001);
+    setfunc("4x-3");
+    setResult(0);
+    setTable([]);
+  }
 
   return (
     <div>
@@ -90,7 +100,10 @@ function Falseposition() {
         <div>
           <input type="number" value={epsilon}step="any" id="epsilon" placeholder="input epsilon" onChange={inputEp} />
         </div>
-        <button type="submit" className="calculate">Calculate</button>
+        <div className="ButtonCon">
+          <button type="submit" className="calculate">Calculate</button>
+          <button type="button" className="calculate" onClick={ResetNew}>Reset</button>
+        </div>
         <h1>Answer: {result.toFixed(6)}</h1>
       </form>
       <div className="tablecon">
