@@ -37,7 +37,10 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: lnwzaa/numerical:latest
+          tags: |
+              lnwzaa/numerical:latest
+              lnwzaa/numerical:${{ github.sha }}
+          
       
             
 
