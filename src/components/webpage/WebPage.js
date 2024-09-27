@@ -12,7 +12,10 @@ function WebPage() {
               <Link to="/graphical">graphical</Link>
               <Link to="/bisection">Bisection</Link>
               <Link to="/falseposition">Falseposition</Link>
-              <Link to="#">Secant</Link>
+              <Link to="/onepoint">Onepoint</Link>
+              <Link to="/taylor">Taylor Series</Link>
+              <Link to="/newton">Newton</Link>
+              <Link to="/secant">Secant</Link>
             </div>
           </div>
             <div className="dropdown">

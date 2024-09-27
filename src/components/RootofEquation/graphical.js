@@ -17,7 +17,6 @@ function Graphical() {
     let xl = parseFloat(xL);
     let xr = parseFloat(xR);
     let eps = epsilon
-    const F = (x) => evaluate(func, { x })
     const Arraydata = []
     let count = 1
     let y = 0 , z = 0

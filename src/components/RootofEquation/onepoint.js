@@ -4,68 +4,40 @@ import { evaluate } from 'mathjs';
 import {Chart as ChartJS} from "chart.js/auto";
 import {Line} from "react-chartjs-2";
 
-function Falseposition() {
-  const [xL, setxL] = useState(2);
-  const [xR, setxR] = useState(5);
+function OnePoint() {
+  const [xInnital, setXInnital] = useState(2);
   const [epsilon, setEpsilon] = useState(0.0001);
-  const [func, setfunc] = useState("x^3.5-80");
+  const [func, setfunc] = useState("(x+7)/(x+1)");
   const [result, setResult] = useState(0);
   const [table, setTable] = useState([]);
 
   const Calculate = (e) => {
     e.preventDefault()
-    let xl = parseFloat(xL);
-    let xr = parseFloat(xR);
+    let innitial = parseFloat(xInnital)
     let eps = epsilon
-    let xm = 0
+    let xI = innitial
     let xold = 0
     let error = 1, i = 0
     const Arraydata = []
+    Arraydata.push({iteration: i ,xI,error})
     while (error > eps) {
-      xold = xm
-      if(F(xl)*F(xr)>0){
-        break;
-      }
-      xm = Formula(xl,xr)
-      if (xm === 0) {
-        break;
-      }
-      else if (F(xm) * F(xr) > 0) {
-        xr = xm
-      }
-      else if (F(xm) * F(xr) < 0) {
-        xl = xm
-
-      }
-
-      if (i > 0) {
-        error = Math.abs(xm - xold)
-        if (error < eps) {
-          break;
-        }
-      }
-      Arraydata.push({ iteration: i + 1, xl, xm, xr });
-      i++;
-
+        xold = xI
+        xI = F(xI)
+        error = Math.abs(xI-xold)
+        Arraydata.push({iteration:i+1,xI,error})
+        i++
     }
-    setResult(xm)
+    setResult(xI)
     setTable(Arraydata)
 
-  }
-  const Formula = (xl,xr) =>{
-    return (xl*F(xr)-xr*F(xl))/(F(xr)-F(xl));
   }
   const F = (x) =>{
     return evaluate(func, { x });
   }
 
-  const inputXL = (e) => {
+  const inputXInnital = (e) => {
     console.log(e.target.value)
-    setxL(e.target.value);
-  }
-  const inputXR = (e) => {
-    console.log(e.target.value)
-    setxR(e.target.value);
+    setXInnital(e.target.value);
   }
   const inputEp = (e) => {
     console.log(e.target.value)
@@ -76,17 +48,16 @@ function Falseposition() {
     setfunc(e.target.value);
   }
   const ResetNew = () =>{
-    setxL(2);
-    setxR(5);
+    setXInnital(2);
     setEpsilon(0.0001);
-    setfunc("x^3.5-80");
+    setfunc("(x+7)/(x+1)");
     setResult(0);
     setTable([]);
   }
 
   return (
     <div>
-      <h1 className="form-title">False Position Method Calculator</h1>
+      <h1 className="form-title">OnePoint Method Calculator</h1>
       <form onSubmit={Calculate}>
         <div className="formcontainer">
        
@@ -94,10 +65,7 @@ function Falseposition() {
           <input type="string" value={func} step="any" id="func" placeholder="input function"  onChange={inputFunc} />
         </div>
         <div>
-          <input type="number" value={xL} step="any" id="xl" placeholder="input xl" onChange={inputXL} />
-        </div>
-        <div>
-          <input type="number" value={xR} step="any" id="xr" placeholder="input xr" onChange={inputXR} />
+          <input type="number" value={xInnital} step="any" id="xr" placeholder="input innitial x" onChange={inputXInnital} />
         </div>
         <div>
           <input type="number" value={epsilon}step="any" id="epsilon" placeholder="input epsilon" onChange={inputEp} />
@@ -115,18 +83,16 @@ function Falseposition() {
             <thead>
               <tr>
                 <th scope="col">Iteration</th>
-                <th width="30%">XL</th>
-                <th width="30%">XM</th>
-                <th width="30%">XR</th>
+                <th width="30%">X</th>
+                <th width="30%">Error</th>
               </tr>
             </thead>
             <tbody>
               {table.map((element, index) => (
                 <tr key={index}>
                   <td>{element.iteration}</td>
-                  <td>{element.xl.toFixed(6)}</td>
-                  <td>{element.xm.toFixed(6)}</td>
-                  <td>{element.xr.toFixed(6)}</td>
+                  <td>{element.xI.toFixed(6)}</td>
+                  <td>{element.error.toFixed(6)}</td>
                 </tr>
               ))}
             </tbody>
@@ -137,11 +103,11 @@ function Falseposition() {
         <div className="ChartCon">
         <Line
           data={{
-            labels: table.map((_,index) => (index+1).toString()),
+            labels: table.map((_,index) => (index).toString()),
             datasets: [
               {
-                label: 'XM Values',
-                data: table.map((element) => element.xm),
+                label: 'X Values',
+                data: table.map((element) => element.xI),
                 borderColor: 'rgba(75,192,192,1)',
                 backgroundColor: 'rgba(75,192,192,0.2)',
                 fill: true,
@@ -160,6 +126,6 @@ function Falseposition() {
 
 }
 
-export default Falseposition;
+export default OnePoint;
 
 

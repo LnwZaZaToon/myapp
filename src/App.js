@@ -5,6 +5,9 @@ import Bisection from './components/RootofEquation/bisection';
 import Falseposition from './components/RootofEquation/Falsepositon';
 import Graphical from './components/RootofEquation/graphical';
 import Home from './components/webpage/Home';
+import OnePoint from './components/RootofEquation/onepoint';
+import Newton from './components/RootofEquation/newton';
+import Secant from './components/RootofEquation/secant';
 //import Footer from './components/webpage/Footer'
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
@@ -18,6 +21,10 @@ function App() {
           <Route exact path="/graphical" element={<Graphical/>} />
           <Route exact path="/bisection" element={<Bisection/>} />
           <Route exact path="/falseposition" element={<Falseposition/>} />
+          <Route exact path="/onepoint" element={<OnePoint/>} />
+          <Route exact path="/newton" element={<Newton/>} />
+          <Route exact path="/secant" element={<Secant/>} />
+         
       
         </Routes>  
     </BrowserRouter>
