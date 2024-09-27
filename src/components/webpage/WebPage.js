@@ -9,6 +9,7 @@ function WebPage() {
           <div className="dropdown">
             <a href="#"><li>Root of equation</li></a>
             <div className="dropdown-content">
+              <Link to="/graphical">graphical</Link>
               <Link to="/bisection">Bisection</Link>
               <Link to="/falseposition">Falseposition</Link>
               <Link to="#">Secant</Link>
