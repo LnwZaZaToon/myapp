@@ -9,6 +9,9 @@ import OnePoint from './components/RootofEquation/onepoint';
 import Newton from './components/RootofEquation/newton';
 import Secant from './components/RootofEquation/secant';
 import Taylor from './components/RootofEquation/taylor';
+import Gaussian from './components/linearalgebra/gaussian';
+import GaussianEliminationJordan from './components/linearalgebra/gaussianjordan';
+import MatrixInversion from './components/linearalgebra/matrixinversion';
 //import Footer from './components/webpage/Footer'
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
@@ -26,7 +29,10 @@ function App() {
           <Route exact path="/taylor" element={<Taylor/>} />
           <Route exact path="/newton" element={<Newton/>} />
           <Route exact path="/secant" element={<Secant/>} />
-         
+          <Route exact path="/gaussian" element={<Gaussian/>} />   
+          <Route exact path="/gaussianjordan" element={<GaussianEliminationJordan/>} />   
+          <Route exact path="/matrixinversion" element={<MatrixInversion/>} /> 
+              
       
         </Routes>  
     </BrowserRouter>
