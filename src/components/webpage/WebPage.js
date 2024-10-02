@@ -20,10 +20,12 @@ function WebPage() {
           </div>
             <div className="dropdown">
               <a href="#"><li>Linear Algebra</li></a>
-                <div className="dropdown-content">
-                <a href="#">Bisection</a>
-                <a href="#">Newton-Raphson</a>
-                <a href="#">Secant</a>
+              <div className="dropdown-content">
+                <Link to="/gaussian">GaussianElimation</Link>
+                <Link to="/gaussianjordan">GaussianElimation</Link>
+                <Link to="/matrixinversion">MatrixInversion</Link>
+                
+                
               </div>
             </div>
             <a href="#"><li>Interpolation</li></a>

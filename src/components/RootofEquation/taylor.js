@@ -7,7 +7,7 @@ import {Line} from "react-chartjs-2";
 function Taylor() {
   const [xInnital, setXInnital] = useState(4);
   const [x0Innital, setX0Innital] = useState(2);
-  const [N , setN] = useState(0);
+  const [N , setN] = useState(4);
   const [func, setfunc] = useState("log(x)");
   const [result, setResult] = useState(0);
   const [table, setTable] = useState([]);
@@ -59,7 +59,7 @@ function Taylor() {
   const ResetNew = () =>{
     setXInnital(4)
     setX0Innital(2)
-    setN(3)
+    setN(4)
     setfunc("log(x)");
     setResult(0);
     setTable([]);
