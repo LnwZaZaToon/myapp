@@ -57,6 +57,15 @@ input[type="number"],input[type="string"] {
   font-size: 16px;
 }
 
+.OptionForm{
+  width: 250px;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px; 
+}
+
 input[type="number"]:focus,
 input[type="string"]:focus {
   border-color: #007bff;

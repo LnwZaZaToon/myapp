@@ -22,7 +22,7 @@ function WebPage() {
               <a href="#"><li>Linear Algebra</li></a>
               <div className="dropdown-content">
                 <Link to="/gaussian">GaussianElimation</Link>
-                <Link to="/gaussianjordan">GaussianElimation</Link>
+                <Link to="/gaussianjordan">GaussianElimationJordan</Link>
                 <Link to="/matrixinversion">MatrixInversion</Link>
                 
                 

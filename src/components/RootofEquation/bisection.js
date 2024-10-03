@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import './bisection.css';
 import { evaluate } from 'mathjs';
-import {Chart as ChartJS} from "chart.js/auto";
-import {Line} from "react-chartjs-2";
+import { Chart as ChartJS } from "chart.js/auto";
+import { Line } from "react-chartjs-2";
 
 function Bisection() {
   const [xL, setxL] = useState(0);
@@ -11,6 +11,28 @@ function Bisection() {
   const [func, setfunc] = useState("4x-3");
   const [result, setResult] = useState(0);
   const [table, setTable] = useState([]);
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async()=>{
+      try{
+        const res = await fetch('http://localhost:4000/')
+        const result = await res.json()
+        setData(result)
+      }
+      catch(error){
+          console.log(error)
+      }
+
+    }
+    fetchData();
+
+  }, []);
+
+  const logData = () => {
+    console.log(data)
+  }
+
   const Calculate = (e) => {
     e.preventDefault()
     let xl = parseFloat(xL);
@@ -23,7 +45,7 @@ function Bisection() {
     const Arraydata = []
     while (error > epsilon) {
       xold = xm
-      if(F(xl)*F(xr)>0){
+      if (F(xl) * F(xr) > 0) {
         break;
       }
       xm = (xl + xr) / 2
@@ -68,7 +90,7 @@ function Bisection() {
     console.log(e.target.value)
     setfunc(e.target.value);
   }
-  const ResetNew = () =>{
+  const ResetNew = () => {
     setxL(0);
     setxR(5);
     setEpsilon(0.0001);
@@ -76,30 +98,41 @@ function Bisection() {
     setResult(0);
     setTable([]);
   }
-
+  const handleOptionChangeFunc =(e)=>{
+    setfunc(e.target.value);
+  }
 
   return (
     <div>
       <h1 className="form-title">Bisection Method Calculator</h1>
       <form onSubmit={Calculate}>
         <div className="formcontainer">
-       
-        <div>
-          <input type="string" value={func} step="any" id="func" placeholder="input function"  onChange={inputFunc} />
-        </div>
-        <div>
-          <input type="number" value={xL} step="any" id="xl" placeholder="input xl" onChange={inputXL} />
-        </div>
-        <div>
-          <input type="number" value={xR} step="any" id="xr" placeholder="input xr" onChange={inputXR} />
-        </div>
-        <div>
-          <input type="number" value={epsilon}step="any" id="epsilon" placeholder="input epsilon" onChange={inputEp} />
-        </div>
-        <div className="ButtonCon">
-          <button type="submit" className="calculate">Calculate</button>
-          <button type="button" className="calculate" onClick={ResetNew}>Reset</button>
-        </div>
+
+          <div>
+            <input type="string" value={func} step="any" id="func" placeholder="input function" onChange={inputFunc} />
+          </div>
+          <div>
+            <input type="number" value={xL} step="any" id="xl" placeholder="input xl" onChange={inputXL} />
+          </div>
+          <div>
+            <input type="number" value={xR} step="any" id="xr" placeholder="input xr" onChange={inputXR} />
+          </div>
+          <div>
+            <input type="number" value={epsilon} step="any" id="epsilon" placeholder="input epsilon" onChange={inputEp} />
+          </div>
+          <select  onChange={handleOptionChangeFunc} className="OptionForm" >
+            <option value={null}>Equation example</option>
+            {data.map((data) => (
+              <option key={data.id}>
+                {`${data.equation}`}
+              </option>
+            ))}
+          </select>
+          <div className="ButtonCon">
+            <button type="submit" className="calculate">Calculate</button>
+            <button type="button" className="calculate" onClick={ResetNew}>Reset</button>
+            <button type="button" className="calculate" onClick={logData}>log</button>
+          </div>
         </div>
         <h1>Answer: {result.toFixed(6)}</h1>
       </form>
@@ -129,24 +162,24 @@ function Bisection() {
       </div>
       <div className="ChartXm">
         <div className="ChartCon">
-        <Line
-          data={{
-            labels: table.map((_,index) => (index + 1).toString()),
-            datasets: [
-              {
-                label: 'XM Values',
-                data: table.map((element) => element.xm),
-                borderColor: 'rgba(75,192,192,1)',
-                backgroundColor: 'rgba(75,192,192,0.2)',
-                fill: true,
-              },
-            ],
-          }}
-          options={{
-            responsive: true,
-            maintainAspectRatio: false,
-          }}     
-        />
+          <Line
+            data={{
+              labels: table.map((_, index) => (index + 1).toString()),
+              datasets: [
+                {
+                  label: 'XM Values',
+                  data: table.map((element) => element.xm),
+                  borderColor: 'rgba(75,192,192,1)',
+                  backgroundColor: 'rgba(75,192,192,0.2)',
+                  fill: true,
+                },
+              ],
+            }}
+            options={{
+              responsive: true,
+              maintainAspectRatio: false,
+            }}
+          />
         </div>
       </div>
     </div>
