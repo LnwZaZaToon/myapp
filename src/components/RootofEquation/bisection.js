@@ -16,7 +16,7 @@ function Bisection() {
   useEffect(() => {
     const fetchData = async()=>{
       try{
-        const res = await fetch('http://localhost:4000/')
+        const res = await fetch('http://localhost:4000//api/equations')
         const result = await res.json()
         setData(result)
       }

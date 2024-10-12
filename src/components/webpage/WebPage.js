@@ -1,8 +1,9 @@
-import './Webpage.css';
+import './Webpage.css'
 import { Link } from 'react-router-dom';
-
+import 'bootstrap/dist/css/bootstrap.min.css';
 function WebPage() {
   return (
+    
     <div className="OutHeader">
       <div className="InHeader">
         <div className="navBar">     
@@ -21,6 +22,7 @@ function WebPage() {
             <div className="dropdown">
               <a href="#"><li>Linear Algebra</li></a>
               <div className="dropdown-content">
+              <Link to="/cramer">Cramer</Link>
                 <Link to="/gaussian">GaussianElimation</Link>
                 <Link to="/gaussianjordan">GaussianElimationJordan</Link>
                 <Link to="/matrixinversion">MatrixInversion</Link>
@@ -28,11 +30,19 @@ function WebPage() {
                 
               </div>
             </div>
-            <a href="#"><li>Interpolation</li></a>
+            <div className="dropdown">
+              <a href="#"><li>Linear Algebra</li></a>
+              <div className="dropdown-content">
+                <Link to="/lagrange">lagrange</Link>
+                
+                
+              </div>
+            </div>
             
         </div>        
       </div>
     </div>
+    
   );
 }
 
