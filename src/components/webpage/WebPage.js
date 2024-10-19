@@ -34,6 +34,18 @@ function WebPage() {
               <a href="#"><li>Linear Algebra</li></a>
               <div className="dropdown-content">
                 <Link to="/lagrange">lagrange</Link>
+                <Link to="/newtonInterpolation">Newton</Link>
+                
+                
+              </div>
+            </div>
+            <div className="dropdown">
+              <a href="#"><li>Integral</li></a>
+              <div className="dropdown-content">
+                <Link to="/Trapzoidal">Trapzoidal</Link>
+                <Link to="/CompositeTrapzoidal">CompositeTrapzoidal</Link>
+                <Link to="/Simpson">Simpson</Link>
+                <Link to="/CompositeSimpson">CompositeSimpson</Link>
                 
                 
               </div>

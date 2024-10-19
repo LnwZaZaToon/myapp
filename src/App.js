@@ -15,9 +15,13 @@ import MatrixInversion from './components/linearalgebra/matrixinversion';
 import Largarnge from './components/Interpolation/largarnge';
 import Cramer from './components/linearalgebra/cramer';
 import ConjugateGradientMethod from './components/linearalgebra/ConjugateGradient';
-//import Footer from './components/webpage/Footer'
+import NewtonInter from './components/Interpolation/newtonInter';
+import Trapzoidal from './components/intergral/Trapzoidal';
+import CompositeTrapzoidal from './components/intergral/CompositeTrapzoidal';
+import Simpson from './components/intergral/Simpson';
+import CompositeSimpson from './components/intergral/CompositeSimpson';
+//import Footer from './components/webpage/Footer';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-
 function App() {
   return (
     <div>
@@ -37,6 +41,11 @@ function App() {
           <Route exact path="/gaussianjordan" element={<GaussianEliminationJordan/>} />   
           <Route exact path="/matrixinversion" element={<MatrixInversion/>} /> 
           <Route exact path="/lagrange" element={<Largarnge/>} /> 
+          <Route exact path="/newtonInterpolation" element={<NewtonInter/>} />
+          <Route exact path="/Trapzoidal" element={<Trapzoidal/>} />
+          <Route exact path="/CompositeTrapzoidal" element={<CompositeTrapzoidal/>} />
+          <Route exact path="/Simpson" element={<Simpson/>} />
+          <Route exact path="/CompositeSimpson" element={<CompositeSimpson/>} />
               
       
         </Routes>  
