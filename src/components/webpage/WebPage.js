@@ -46,6 +46,17 @@ function WebPage() {
                 <Link to="/CompositeTrapzoidal">CompositeTrapzoidal</Link>
                 <Link to="/Simpson">Simpson</Link>
                 <Link to="/CompositeSimpson">CompositeSimpson</Link>
+              </div>
+            </div>
+            <div className="dropdown">
+              <a href="#"><li>differential</li></a>
+              <div className="dropdown-content">
+                <Link to="/Forwardh">Forwardh</Link>
+                <Link to="/Backwardh">Backwardh</Link>
+                <Link to="/Centralh">Centralh2</Link>
+                <Link to="/Forwardh2">Forwardh2</Link>
+                <Link to="/Backwardh2">Backwardh2</Link>
+                <Link to="/Centralh4">Centralh4</Link>
                 
                 
               </div>

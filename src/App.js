@@ -20,6 +20,12 @@ import Trapzoidal from './components/intergral/Trapzoidal';
 import CompositeTrapzoidal from './components/intergral/CompositeTrapzoidal';
 import Simpson from './components/intergral/Simpson';
 import CompositeSimpson from './components/intergral/CompositeSimpson';
+import Fowardh from './components/diiferential/Fowardh';
+import Backwardh from './components/diiferential/Backwardh';
+import Centralh2 from './components/diiferential/Centralh2';
+import Fowardh2 from './components/diiferential/Fowardh2';
+import Backwardh2 from './components/diiferential/ฺBackwardh2';
+import Centralh4 from './components/diiferential/Centralh4';
 //import Footer from './components/webpage/Footer';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 function App() {
@@ -46,6 +52,13 @@ function App() {
           <Route exact path="/CompositeTrapzoidal" element={<CompositeTrapzoidal/>} />
           <Route exact path="/Simpson" element={<Simpson/>} />
           <Route exact path="/CompositeSimpson" element={<CompositeSimpson/>} />
+          <Route exact path="/Forwardh" element={<Fowardh/>} />
+          <Route exact path="/Backwardh" element={<Backwardh/>} />
+          <Route exact path="/Centralh" element={<Centralh2/>} />
+          <Route exact path="/CompositeSimpson" element={<CompositeSimpson/>} />
+          <Route exact path="/Forwardh2" element={<Fowardh2/>} />
+          <Route exact path="/Backwardh2" element={<Backwardh2/>} />
+          <Route exact path="/Centralh4" element={<Centralh4/>} />
               
       
         </Routes>  

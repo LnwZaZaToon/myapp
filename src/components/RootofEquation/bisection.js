@@ -3,7 +3,7 @@ import './bisection.css';
 import { evaluate } from 'mathjs';
 import { Chart as ChartJS } from "chart.js/auto";
 import { Line } from "react-chartjs-2";
-
+import { Input }from "antd";
 function Bisection() {
   const [xL, setxL] = useState(0);
   const [xR, setxR] = useState(5);
@@ -14,14 +14,14 @@ function Bisection() {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    const fetchData = async()=>{
-      try{
+    const fetchData = async () => {
+      try {
         const res = await fetch('http://localhost:4000//api/equations')
         const result = await res.json()
         setData(result)
       }
-      catch(error){
-          console.log(error)
+      catch (error) {
+        console.log(error)
       }
 
     }
@@ -98,7 +98,7 @@ function Bisection() {
     setResult(0);
     setTable([]);
   }
-  const handleOptionChangeFunc =(e)=>{
+  const handleOptionChangeFunc = (e) => {
     setfunc(e.target.value);
   }
 
@@ -120,7 +120,7 @@ function Bisection() {
           <div>
             <input type="number" value={epsilon} step="any" id="epsilon" placeholder="input epsilon" onChange={inputEp} />
           </div>
-          <select  onChange={handleOptionChangeFunc} className="OptionForm" >
+          <select onChange={handleOptionChangeFunc} className="OptionForm" >
             <option value={null}>Equation example</option>
             {data.map((data) => (
               <option key={data.id}>
