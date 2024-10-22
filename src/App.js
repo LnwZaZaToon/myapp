@@ -26,14 +26,16 @@ import Centralh2 from './components/diiferential/Centralh2';
 import Fowardh2 from './components/diiferential/Fowardh2';
 import Backwardh2 from './components/diiferential/ฺBackwardh2';
 import Centralh4 from './components/diiferential/Centralh4';
-//import Footer from './components/webpage/Footer';
+import Footer from './components/webpage/Footer';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 function App() {
   return (
-    <div>
+    <div className="app-wrapper">
     <BrowserRouter>   
       <Website/>
+      <div className="main-content">
         <Routes>
+          
           <Route exact path="/" element={<Home />} />
           <Route exact path="/graphical" element={<Graphical/>} />
           <Route exact path="/bisection" element={<Bisection/>} />
@@ -59,10 +61,13 @@ function App() {
           <Route exact path="/Forwardh2" element={<Fowardh2/>} />
           <Route exact path="/Backwardh2" element={<Backwardh2/>} />
           <Route exact path="/Centralh4" element={<Centralh4/>} />
-              
+         
       
         </Routes>  
+        </div>
+      <Footer/>
     </BrowserRouter>
+    
     </div> 
   );
 }

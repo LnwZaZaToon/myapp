@@ -1,71 +1,69 @@
-import './Webpage.css'
-import { Link } from 'react-router-dom';
+import './Webpage.css';
+import { NavLink } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+
 function WebPage() {
+  const handleReload = (path) => {
+    if (window.location.pathname === path) {
+      window.location.reload(); 
+    }
+  };
+
   return (
-    
     <div className="OutHeader">
       <div className="InHeader">
-        <div className="navBar">     
+        <div className="navBar">
           <div className="dropdown">
             <a href="#"><li>Root of equation</li></a>
             <div className="dropdown-content">
-              <Link to="/graphical">graphical</Link>
-              <Link to="/bisection">Bisection</Link>
-              <Link to="/falseposition">Falseposition</Link>
-              <Link to="/onepoint">Onepoint</Link>
-              <Link to="/taylor">Taylor Series</Link>
-              <Link to="/newton">Newton</Link>
-              <Link to="/secant">Secant</Link>
+              <NavLink to="/graphical" onClick={() => handleReload('/graphical')}>graphical</NavLink>
+              <NavLink to="/bisection" onClick={() => handleReload('/bisection')}>Bisection</NavLink>
+              <NavLink to="/falseposition" onClick={() => handleReload('/falseposition')}>Falseposition</NavLink>
+              <NavLink to="/onepoint" onClick={() => handleReload('/onepoint')}>Onepoint</NavLink>
+              <NavLink to="/taylor" onClick={() => handleReload('/taylor')}>Taylor Series</NavLink>
+              <NavLink to="/newton" onClick={() => handleReload('/newton')}>Newton</NavLink>
+              <NavLink to="/secant" onClick={() => handleReload('/secant')}>Secant</NavLink>
             </div>
           </div>
-            <div className="dropdown">
-              <a href="#"><li>Linear Algebra</li></a>
-              <div className="dropdown-content">
-              <Link to="/cramer">Cramer</Link>
-                <Link to="/gaussian">GaussianElimation</Link>
-                <Link to="/gaussianjordan">GaussianElimationJordan</Link>
-                <Link to="/matrixinversion">MatrixInversion</Link>
-                
-                
-              </div>
+          <div className="dropdown">
+            <a href="#"><li>Linear Algebra</li></a>
+            <div className="dropdown-content">
+              <NavLink to="/cramer" onClick={() => handleReload('/cramer')}>Cramer</NavLink>
+              <NavLink to="/gaussian" onClick={() => handleReload('/gaussian')}>Gaussian Elimination</NavLink>
+              <NavLink to="/gaussianjordan" onClick={() => handleReload('/gaussianjordan')}>Gaussian Elimination Jordan</NavLink>
+              <NavLink to="/matrixinversion" onClick={() => handleReload('/matrixinversion')}>Matrix Inversion</NavLink>
             </div>
-            <div className="dropdown">
-              <a href="#"><li>Linear Algebra</li></a>
-              <div className="dropdown-content">
-                <Link to="/lagrange">lagrange</Link>
-                <Link to="/newtonInterpolation">Newton</Link>
-                
-                
-              </div>
+          </div>
+          <div className="dropdown">
+            <a href="#"><li>Interpolation</li></a>
+            <div className="dropdown-content">
+              <NavLink to="/lagrange" onClick={() => handleReload('/lagrange')}>Lagrange</NavLink>
+              <NavLink to="/newtonInterpolation" onClick={() => handleReload('/newtonInterpolation')}>Newton</NavLink>
             </div>
-            <div className="dropdown">
-              <a href="#"><li>Integral</li></a>
-              <div className="dropdown-content">
-                <Link to="/Trapzoidal">Trapzoidal</Link>
-                <Link to="/CompositeTrapzoidal">CompositeTrapzoidal</Link>
-                <Link to="/Simpson">Simpson</Link>
-                <Link to="/CompositeSimpson">CompositeSimpson</Link>
-              </div>
+          </div>
+          <div className="dropdown">
+            <a href="#"><li>Integral</li></a>
+            <div className="dropdown-content">
+              <NavLink to="/Trapzoidal" onClick={() => handleReload('/Trapzoidal')}>Trapzoidal</NavLink>
+              <NavLink to="/CompositeTrapzoidal" onClick={() => handleReload('/CompositeTrapzoidal')}>Composite Trapzoidal</NavLink>
+              <NavLink to="/Simpson" onClick={() => handleReload('/Simpson')}>Simpson</NavLink>
+              <NavLink to="/CompositeSimpson" onClick={() => handleReload('/CompositeSimpson')}>Composite Simpson</NavLink>
             </div>
-            <div className="dropdown">
-              <a href="#"><li>differential</li></a>
-              <div className="dropdown-content">
-                <Link to="/Forwardh">Forwardh</Link>
-                <Link to="/Backwardh">Backwardh</Link>
-                <Link to="/Centralh">Centralh2</Link>
-                <Link to="/Forwardh2">Forwardh2</Link>
-                <Link to="/Backwardh2">Backwardh2</Link>
-                <Link to="/Centralh4">Centralh4</Link>
-                
-                
-              </div>
+          </div>
+          <div className="dropdown">
+            <a href="#"><li>Differential</li></a>
+            <div className="dropdown-content">
+              <NavLink to="/Forwardh" onClick={() => handleReload('/Forwardh')}>Forwardh</NavLink>
+              <NavLink to="/Backwardh" onClick={() => handleReload('/Backwardh')}>Backwardh</NavLink>
+              <NavLink to="/Centralh" onClick={() => handleReload('/Centralh')}>Centralh</NavLink>
+              <NavLink to="/Forwardh2" onClick={() => handleReload('/Forwardh2')}>Forwardh2</NavLink>
+              <NavLink to="/Backwardh2" onClick={() => handleReload('/Backwardh2')}>Backwardh2</NavLink>
+              <NavLink to="/Centralh4" onClick={() => handleReload('/Centralh4')}>Centralh4</NavLink>
             </div>
-            
+          </div>
         </div>        
       </div>
     </div>
-    
   );
 }
 

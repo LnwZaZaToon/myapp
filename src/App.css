@@ -1,6 +1,17 @@
-.App {
-  text-align: center;
+
+
+
+.app-wrapper {
+  background-color: #e01a1a; /* Change this to your desired background color */
+  min-height: 100vh; /* Ensures it covers the entire viewport */
+  display: flex;
+  flex-direction: column; /* Stacks children vertically */
 }
+
+.main-content {
+  flex: 1; /* This allows the main content to take up the remaining space */
+}
+
 
 .App-logo {
   height: 40vmin;
@@ -36,3 +47,4 @@
     transform: rotate(360deg);
   }
 }
+

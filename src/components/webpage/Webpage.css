@@ -1,21 +1,32 @@
-/* Resetting default styles */
+
+
+
+/* General Reset */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* Styling the outer header */
+/* Outer header styling */
 .OutHeader {
     width: 100%;
     height: 80px;
-    background-color: #101010;
+    background-color: #212529;
     display: flex;
     justify-content: center;
     align-items: center;
+    position: fixed; /* Keeps the navbar fixed at the top */
+    top: 0;
+    z-index: 1000; /* Ensures it stays above the page content */
 }
 
-/* Styling the inner header */
+/* Padding for body to prevent content from being hidden behind navbar */
+body {
+    padding-top: 80px; /* This should match the height of .OutHeader */
+}
+
+/* Inner header styling */
 .InHeader {
     width: 1000px;
     height: 100%;
@@ -24,7 +35,7 @@
     align-items: center;
 }
 
-/* Styling the navigation bar */
+/* Navigation Bar Styling */
 .navBar {
     display: flex;
     justify-content: center;
@@ -40,42 +51,45 @@
     font-size: 16px;
     text-decoration: none;
     transition: color 0.3s;
+    font-family: Arial ;
 }
 
 .navBar a:hover {
-    color: #ff5722;
+    color: #585858;
 }
 
+/* Dropdown menu styling */
 .dropdown {
     position: relative;
     display: inline-block;
     margin: 10px;
     padding: 10px;
+    list-style:none;
 }
 
 .dropdown-content {
     display: none;
     position: absolute;
-    background-color: #101010;
+    background-color: #343a40;
     min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    border-bottom-left-radius: 20px;
+    font-family: Arial ;
+   
 }
 
 .dropdown-content a {
-    color: white;
+    color: #f8f9fa;
     padding: 12px 16px;
     text-decoration: none;
     display: block;
     text-align: left;
 }
 
-
-
 .dropdown:hover .dropdown-content {
     display: block;
 }
 
-.dropdown:hover > a {
-    color: #ff5722;
-}
+
+ 
