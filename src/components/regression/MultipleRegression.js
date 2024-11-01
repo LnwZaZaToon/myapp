@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { lusolve } from "mathjs";
-import Plot from "react-plotly.js";
 
 function MultipleRegression() {
   const [X1target, setX1target] = useState(0);
@@ -132,32 +131,6 @@ function MultipleRegression() {
         <h2>Regression Equation: {regressionEquation}</h2>
       </form>
 
-      {/* Plotly Graph */}
-      <Plot
-        data={[
-          {
-            x: plotData.map(p => p.x),
-            y: plotData.map(p => p.y),
-            type: "scatter",
-            mode: "lines+markers",
-            marker: { color: "blue" },
-            name: "Regression Line",
-          },
-          {
-            x: points.map(p => parseFloat(p.x1)),
-            y: points.map(p => parseFloat(p.y)),
-            type: "scatter",
-            mode: "markers",
-            marker: { color: "red" },
-            name: "Data Points",
-          },
-        ]}
-        layout={{
-          title: "Simple Regression Line",
-          xaxis: { title: "X1" },
-          yaxis: { title: "Y" },
-        }}
-      />
     </div>
   );
 }
