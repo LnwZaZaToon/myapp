@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import './styleLinear.css';
 
 const GaussSeidel = () => {
@@ -8,9 +8,54 @@ const GaussSeidel = () => {
   const [iterations, setIterations] = useState([]); // New state for iteration data
   const [showMatrix, setShowMatrix] = useState(false);
   const [calculated, setCalculated] = useState(false);
+  const [data, setData] = useState([]);
   const maxMatrixSize = 10;
   const tolerance = 1e-6;
   const maxIterations = 100;
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch('http://localhost:4000/api/Gauss');
+        const result = await res.json();
+
+        //เช็คว่า type เหมือนกันไหม
+        const filteredResult = result.filter(item => item.methodType === "seidal");
+        setData(filteredResult);
+
+        console.log(filteredResult);
+      } catch (error) {
+        console.log("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const PostDataBase = async (e) => {
+    e.preventDefault();
+    const response = await fetch('http://localhost:4000/api/Add-Gauss', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        methodType: "seidal",
+        equation: matrix,
+        size: numRows,
+        answer: result,
+        table: iterations
+      }),
+    });
+
+    const dbResult = await response.json();
+    console.log('Response Status:', response.status);
+    console.log('Result from API:', dbResult);
+
+    if (!response.ok) {
+      console.error('Failed to save equation:', dbResult.message);
+      alert("Fail")
+      return;
+    }
+    alert("Success")
+  }
 
   const handleNumRowsChange = (event) => {
     const newNumRows = parseInt(event.target.value);
@@ -120,6 +165,53 @@ const GaussSeidel = () => {
     setShowMatrix(true);
   };
 
+  const handleOptionChangeFunc = async (e) => {
+    const selectedEquation = e.target.value;
+    const selected = data.find(item => item.equation.toString() === selectedEquation);
+
+    if (selected) {
+      console.log("Selected equation:", selected.equation);
+      console.log("Selected table:", selected.table);
+      console.log("Selected result:", selected.answer);
+
+      setNumRows(selected.size);
+      setMatrix(selected.equation);
+      setResult(selected.answer);
+      setIterations(selected.table);
+      setCalculated(true);
+      setShowMatrix(true);
+
+    } else {
+      console.error("Selected equation not found in data.");
+    }
+  };
+
+  const renderIterationsTable = () => {
+    return (
+      <table className="iterations-table">
+        <thead>
+          <tr>
+            <th>Iteration</th>
+            {Array.from({ length: numRows }, (_, index) => (
+              <th key={index}>{`x${index + 1}`}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {iterations.map((iteration, index) => (
+            <tr key={index}>
+              <td>{index + 1}</td>
+              {iteration.solutions.map((value, idx) => (  // Adjusted here
+                <td key={idx}>{value.toFixed(6)}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
+  };
+
+
   return (
     <div className="calculator-container">
       <form onSubmit={handleGenerateMatrix}>
@@ -130,6 +222,14 @@ const GaussSeidel = () => {
           <div>
             <input type="number" value={numRows} onChange={handleNumRowsChange} />
           </div>
+          <select onChange={handleOptionChangeFunc} className="option-form">
+            <option value={null}>Equation example</option>
+            {data.map((data) => (
+              <option key={data.id}>
+                {`${data.equation}`}
+              </option>
+            ))}
+          </select>
           <div className="button-container">
             <button type="submit" className="calculate">Generate Matrix</button>
             <button type="button" className="calculate" onClick={ResetMatrix}>Reset</button>
@@ -141,38 +241,20 @@ const GaussSeidel = () => {
       </div>
       <div className="button-container">
         {showMatrix && (<button type="button" onClick={handleCalculate} className="calculate">Calculate</button>)}
+        {showMatrix && (<button type="button" onClick={PostDataBase} className="calculate">add database</button>)}
       </div>
       {calculated && (
         <div className="result-container">
-          <h2>Results:</h2>
-          <ul>
-            {result.map((value, index) => (
-              <li key={index}>X{index + 1} = {value.toFixed(6)}</li>
-            ))}
-          </ul>
-
-          {/* Iteration Table */}
-          <h2>Iterations:</h2>
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Iteration</th>
-                {Array.from({ length: numRows }, (_, index) => (
-                  <th key={index}>X{index + 1}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {iterations.map((element) => (
-                <tr key={element.iteration}>
-                  <td>{element.iteration}</td>
-                  {element.solutions.map((solution, index) => (
-                    <td key={index}>{solution.toFixed(6)}</td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          {result.map((res, index) => (
+            <div key={index} className="result">
+              {`x${index + 1} = ${res.toFixed(6)}`}
+            </div>
+          ))}
+        </div>
+      )}
+      {calculated && (
+        <div className="table">
+          {renderIterationsTable()}
         </div>
       )}
     </div>

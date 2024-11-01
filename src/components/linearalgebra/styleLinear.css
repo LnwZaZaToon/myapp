@@ -69,7 +69,7 @@ button {
 
 .results-container {
     display: flex;
-    width: 1200px;
+    width: 100%;
     /* Adjust as needed */
     height: 500px;
     /* Controls the height of both the chart and table container */
@@ -99,7 +99,7 @@ button {
 
 
 .table {
-    width: 50%;
+    width: 100%;
     /* Adjust as needed */
     max-height: 300px;
     /* Limit the visible height to show only about 9 rows */

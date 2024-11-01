@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import './styleLinear.css';
 
 const JacobiMethod = () => {
@@ -7,9 +7,55 @@ const JacobiMethod = () => {
   const [result, setResult] = useState([]);
   const [showMatrix, setShowMatrix] = useState(false);
   const [calculated, setCalculated] = useState(false);
+  const [iterations, setIterations] = useState([]); // Track iterations
+  const [data, setData] = useState([]);
   const maxMatrixSize = 10;
   const tolerance = 1e-6; // Convergence threshold
   const maxIterations = 100; // Maximum number of iterations
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch('http://localhost:4000/api/Gauss');
+        const result = await res.json();
+
+        //เช็คว่า type เหมือนกันไหม
+        const filteredResult = result.filter(item => item.methodType === "jacobi");
+        setData(filteredResult);
+
+        console.log(filteredResult);
+      } catch (error) {
+        console.log("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const PostDataBase = async (e) => {
+    e.preventDefault();
+    const response = await fetch('http://localhost:4000/api/Add-Gauss', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        methodType: "jacobi",
+        equation: matrix,
+        size: numRows,
+        answer: result,
+        table: iterations
+      }),
+    });
+
+    const dbResult = await response.json();
+    console.log('Response Status:', response.status);
+    console.log('Result from API:', dbResult);
+
+    if (!response.ok) {
+      console.error('Failed to save equation:', dbResult.message);
+      alert("Fail")
+      return;
+    }
+    alert("Success")
+  }
 
   const handleNumRowsChange = (event) => {
     const newNumRows = parseInt(event.target.value);
@@ -22,6 +68,7 @@ const JacobiMethod = () => {
         )
       );
       setShowMatrix(false); // Hide matrix until generated
+      setIterations([]); // Reset iterations when number of rows changes
     } else {
       alert(`Please enter a number between 2 and ${maxMatrixSize}`);
     }
@@ -33,6 +80,7 @@ const JacobiMethod = () => {
     setResult([]);
     setShowMatrix(false);
     setCalculated(false);
+    setIterations([]); // Reset iterations on reset
   };
 
   const handleInputChange = (event, row, col) => {
@@ -57,6 +105,9 @@ const JacobiMethod = () => {
     let prevSolutions = Array(numRows).fill(0);
     let converged = false;
 
+    // Reset iterations array for new calculations
+    const newIterations = [];
+
     for (let iteration = 0; iteration < maxIterations && !converged; iteration++) {
       converged = true;
       for (let i = 0; i < numRows; i++) {
@@ -74,9 +125,15 @@ const JacobiMethod = () => {
         }
       }
 
+      // Store current iteration results
+      newIterations.push([...solutions]);
+
       // Update previous solutions for the next iteration
       prevSolutions = [...solutions];
     }
+
+    // Update state with iteration results
+    setIterations(newIterations);
 
     if (!converged) {
       alert("Jacobi method did not converge within the maximum iterations.");
@@ -117,6 +174,53 @@ const JacobiMethod = () => {
     setShowMatrix(true);
   };
 
+  const renderIterationsTable = () => {
+    return (
+      <table className="iterations-table">
+        <thead>
+          <tr>
+            <th>Iteration</th>
+            {Array.from({ length: numRows }, (_, index) => (
+              <th key={index}>{`x${index + 1}`}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {iterations.map((iteration, index) => (
+            <tr key={index}>
+              <td>{index + 1}</td>
+              {iteration.map((value, idx) => (
+                <td key={idx}>{value.toFixed(6)}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
+  };
+
+  const handleOptionChangeFunc = async (e) => {
+    const selectedEquation = e.target.value;
+    const selected = data.find(item => item.equation.toString() === selectedEquation);
+
+    if (selected) {
+      console.log("Selected equation:", selected.equation);
+      console.log("Selected table:", selected.table);
+      console.log("Selected result:", selected.answer);
+
+      setNumRows(selected.size);
+      setMatrix(selected.equation);
+      setResult(selected.answer);
+      setIterations(selected.table);
+      setCalculated(true);
+      setShowMatrix(true);
+
+    } else {
+      console.error("Selected equation not found in data.");
+    }
+  };
+
+
   return (
     <div className="calculator-container">
       <form onSubmit={handleGenerateMatrix}>
@@ -127,6 +231,14 @@ const JacobiMethod = () => {
           <div>
             <input type="number" value={numRows} onChange={handleNumRowsChange} />
           </div>
+          <select onChange={handleOptionChangeFunc} className="option-form">
+            <option value={null}>Equation example</option>
+            {data.map((data) => (
+              <option key={data.id}>
+                {`${data.equation}`}
+              </option>
+            ))}
+          </select>
           <div className="button-container">
             <button type="submit" className="calculate">Generate Matrix</button>
             <button type="button" className="calculate" onClick={ResetMatrix}>Reset</button>
@@ -138,6 +250,7 @@ const JacobiMethod = () => {
       </div>
       <div className="button-container">
         {showMatrix && (<button type="submit" onClick={handleCalculate} className="calculate">Calculate</button>)}
+        {showMatrix && (<button type="button" onClick={PostDataBase} className="calculate">add database</button>)}
       </div>
       {calculated && (
         <div className="result-container">
@@ -146,6 +259,11 @@ const JacobiMethod = () => {
               {`x${index + 1} = ${res.toFixed(6)}`}
             </div>
           ))}
+        </div>
+      )}
+      {calculated && (
+        <div className="table">
+          {renderIterationsTable()}
         </div>
       )}
     </div>

@@ -60,7 +60,7 @@ function NewtonInter() {
         <div className="calculator-container">
             <div className="form-container">
                 <div className="form-title" >
-                    <h1 >Lagrange Method Calculator</h1>
+                    <h1 >Newton Interpolation Calculator</h1>
                 </div>
                 <form>
                     <div className="inputPoint">
@@ -96,7 +96,7 @@ function NewtonInter() {
                         </div>
                         <input type="number" value={Xtarget} step="any" placeholder="Input x" onChange={handleXtarget} />
 
-                        <div className="ButtonCon">
+                        <div className="button-container">
                             <button type="submit" className="calculate">Calculate</button>
                             <button type="button" className="calculate" onClick={ResetNew}>Reset</button>
                         </div>

@@ -1,23 +1,65 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import './styleLinear.css';
 function Gaussian() {
     const [Row, setRow] = useState(2);
-    const [Col, setCol] = useState(2);
     const [result, setResult] = useState([]);
     const [Matrix, setMatrix] = useState([]);
     const [calculated, setCalculated] = useState(false);
     const [showMatrix, setShowMatrix] = useState(false);
+    const [data, setData] = useState([]);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await fetch('http://localhost:4000/api/Gauss');
+                const result = await res.json();
+
+                //เช็คว่า type เหมือนกันไหม
+                const filteredResult = result.filter(item => item.methodType === "gauss");
+                setData(filteredResult);
+
+                console.log(filteredResult);
+            } catch (error) {
+                console.log("Error fetching data:", error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    const PostDataBase = async (e) => {
+        e.preventDefault();
+        const response = await fetch('http://localhost:4000/api/Add-Gauss', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                methodType: "gauss",
+                equation: Matrix,
+                size: Row,
+                answer: result
+            }),
+        });
+
+        const dbResult = await response.json();
+        console.log('Response Status:', response.status);
+        console.log('Result from API:', dbResult);
+
+        if (!response.ok) {
+            console.error('Failed to save equation:', dbResult.message);
+            alert("Fail")
+            return;
+        }
+        alert("Success")
+    }
 
     const GenerRateMatrix = (e) => {
         e.preventDefault();
-        const newMatrix = Array.from({ length: Row }, () => Array.from({ length: Col + 1 }, () => ""));
+        const newMatrix = Array.from({ length: Row }, () => Array.from({ length: Row + 1 }, () => ""));
         setMatrix(newMatrix);
         setShowMatrix(true);
     }
 
     const inputRowCol = (e) => {
         setRow(Number(e.target.value));
-        setCol(Number(e.target.value));
     }
 
     const handleMatrixChange = (rowIndex, colIndex, value) => {
@@ -28,7 +70,6 @@ function Gaussian() {
 
     const ResetNew = () => {
         setRow(2);
-        setCol(2);
         setResult([]);
         setMatrix([]);
         setCalculated(false);
@@ -62,6 +103,25 @@ function Gaussian() {
         setResult(X)
         setCalculated(true)
     };
+    const handleOptionChangeFunc = async (e) => {
+        const selectedEquation = e.target.value;
+        const selected = data.find(item => item.equation.toString() === selectedEquation);
+
+        if (selected) {
+            console.log("Selected equation:", selected.equation);
+            console.log("Selected table:", selected.table);
+            console.log("Selected result:", selected.answer);
+
+            setRow(selected.size)
+            setMatrix(selected.equation);
+            setResult(selected.answer)
+            setCalculated(true);
+            setShowMatrix(true);
+
+        } else {
+            console.error("Selected equation not found in data.");
+        }
+    };
 
     return (
         <div className="calculator-container">
@@ -79,19 +139,22 @@ function Gaussian() {
                             onChange={inputRowCol}
                         />
                     </div>
-                    <div className="ButtonCon">
-                        <button type="submit" className="calculate">
-                            Generate Matrix
-                        </button>
-                        <button type="button" className="calculate" onClick={ResetNew}>
-                            Reset
-                        </button>
+                    <select onChange={handleOptionChangeFunc} className="option-form">
+                        <option value={null}>Equation example</option>
+                        {data.map((data) => (
+                            <option key={data.id}>
+                                {`${data.equation}`}
+                            </option>
+                        ))}
+                    </select>
+                    <div className="button-container">
+                        <button type="submit" className="calculate">Generate Matrix</button>
+                        <button type="button" className="calculate" onClick={ResetNew}>Reset</button>
                     </div>
                 </div>
             </form >
             {Matrix.length && showMatrix > 0 && (
                 <div>
-                    <h3>Enter Matrix Values</h3>
                     <div className="matrix-container">
                         {Matrix.map((row, rowIndex) => (
                             <div key={rowIndex} className="matrix-row">
@@ -113,6 +176,7 @@ function Gaussian() {
             )}
             <div className="button-container">
                 {showMatrix && (<button type="button" onClick={Calculate} className="calculate">Calculate</button>)}
+                {showMatrix && (<button type="button" onClick={PostDataBase } className="calculate">add database</button>)}
             </div>
 
             {calculated && (

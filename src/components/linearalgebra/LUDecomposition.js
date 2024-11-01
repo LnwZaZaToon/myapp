@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import './styleLinear.css';
 
 const LU_Decompose = () => {
@@ -11,7 +11,51 @@ const LU_Decompose = () => {
     )
   );
   const [result, setResult] = useState([]);
+  const [data, setData] = useState([]);
   const maxMatrixSize = 10;
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch('http://localhost:4000/api/Gauss');
+        const result = await res.json();
+
+        //เช็คว่า type เหมือนกันไหม
+        const filteredResult = result.filter(item => item.methodType === "LU");
+        setData(filteredResult);
+
+        console.log(filteredResult);
+      } catch (error) {
+        console.log("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const PostDataBase = async (e) => {
+    e.preventDefault();
+    const response = await fetch('http://localhost:4000/api/Add-Gauss', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        methodType: "LU",
+        equation: matrix,
+        size: numRows,
+        answer: result
+      }),
+    });
+
+    const dbResult = await response.json();
+    console.log('Response Status:', response.status);
+    console.log('Result from API:', dbResult);
+
+    if (!response.ok) {
+      console.error('Failed to save equation:', dbResult.message);
+      alert("Fail")
+      return;
+    }
+    alert("Success")
+  }
 
   const handleNumRowsChange = (event) => {
     const newNumRows = parseInt(event.target.value);
@@ -109,6 +153,26 @@ const LU_Decompose = () => {
     setShowMatrix(false);
     setCalculated(false)
   }
+  const handleOptionChangeFunc = async (e) => {
+    const selectedEquation = e.target.value;
+    const selected = data.find(item => item.equation.toString() === selectedEquation);
+
+    if (selected) {
+      console.log("Selected equation:", selected.equation);
+      console.log("Selected table:", selected.table);
+      console.log("Selected result:", selected.answer);
+
+      setNumRows(selected.size);
+      setMatrix(selected.equation);
+      setResult(selected.answer)
+      setCalculated(true);
+      setShowMatrix(true);
+
+    } else {
+      console.error("Selected equation not found in data.");
+    }
+  };
+
 
 
 
@@ -127,6 +191,14 @@ const LU_Decompose = () => {
               className="num-rows-input"
             />
           </div>
+          <select onChange={handleOptionChangeFunc} className="option-form">
+            <option value={null}>Equation example</option>
+            {data.map((data) => (
+              <option key={data.id}>
+                {`${data.equation}`}
+              </option>
+            ))}
+          </select>
           <div className="button-container">
             <button type="submit" className="calculate">Generate Matrix</button>
             <button type="button" className="calculate" onClick={ResetMatrix}>Reset</button>
@@ -135,7 +207,10 @@ const LU_Decompose = () => {
       </form>
       <div className="matrix-container">
         {showMatrix && renderTable()}
+      </div>
+      <div className="button-container">
         {showMatrix && (<button type="submit" onClick={handleCalculate} className="calculate">Calculate</button>)}
+        {showMatrix && (<button type="button" onClick={PostDataBase} className="calculate">add database</button>)}
       </div>
       {calculated && (
         <div className="result-container">

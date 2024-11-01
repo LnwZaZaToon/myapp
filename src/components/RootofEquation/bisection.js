@@ -94,7 +94,7 @@ function Bisection() {
           break;
         }
       }
-      Arraydata.push({ iteration: i + 1, xl, xm, xr });
+      Arraydata.push({ iteration: i + 1, xl, xm, xr ,error});
       i++;
     }
     setResult(xm);

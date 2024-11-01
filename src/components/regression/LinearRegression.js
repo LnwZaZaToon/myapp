@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { lusolve } from "mathjs";
-import Plot from "react-plotly.js";
 
 function LinearRegression() {
   const [X1target, setX1target] = useState(0);
@@ -9,6 +8,7 @@ function LinearRegression() {
   const [pointCount, setPointCount] = useState(2);
   const [points, setPoints] = useState([{ x: "", y: "" }, { x: "", y: "" }]);
   const [plotData, setPlotData] = useState([]);
+  const [calculated, setCalculated] = useState(false)
 
   const Calculate = (e) => {
     e.preventDefault();
@@ -50,6 +50,7 @@ function LinearRegression() {
       return { x, y: intercept + slope * x };
     });
     setPlotData(regressionLine);
+    setCalculated(true)
   };
 
   const ResetNew = () => {
@@ -78,73 +79,84 @@ function LinearRegression() {
   };
 
   return (
-    <div>
-      <h1 className="form-title">Simple Linear Regression (One Predictor)</h1>
-      <form>
-        <div className="inputPoint">
-          <input type="number" step="any" placeholder="input n" onChange={handlePointCountChange}/>
+    <div className="calculator-container">
+      <div className="form-container">
+        <div className="form-title">
+          <h1>Linear Regression</h1>
         </div>
-      </form>
-
-      <form onSubmit={Calculate}>
-        <div className="formcontainer">
-          <div>
-            {points.map((point, index) => (
-              <div key={index} className="pointInputs" style={{ display: 'flex' }}>
-                <input
-                  type="number"
-                  value={point.x}
-                  step="any"
-                  placeholder={`X1${index + 1}`}
-                  onChange={(e) => handlePointChange(index, "x", e.target.value)}
-                />
-                <input
-                  type="number"
-                  value={point.y}
-                  step="any"
-                  placeholder={`Y${index + 1}`}
-                  onChange={(e) => handlePointChange(index, "y", e.target.value)}
-                />
-              </div>
-            ))}
+        <form>
+          <div className="inputPoint">
+            <input type="number" step="any" placeholder="Input number of points" onChange={handlePointCountChange} />
           </div>
-          <input type="number" value={X1target} step="any" placeholder="Input X1" onChange={handleX1target} />
+        </form>
 
-          <div className="ButtonCon">
-            <button type="submit" className="calculate">Calculate</button>
-            <button type="button" className="calculate" onClick={ResetNew}>Reset</button>
+        <form onSubmit={Calculate}>
+          <div className="formcontainer">
+            <div>
+              {points.map((point, index) => (
+                <div key={index} className="pointInputs" style={{ display: 'flex' }}>
+                  <input
+                    type="number"
+                    value={point.x}
+                    step="any"
+                    placeholder={`X1${index + 1}`}
+                    onChange={(e) => handlePointChange(index, "x", e.target.value)}
+                  />
+                  <input
+                    type="number"
+                    value={point.y}
+                    step="any"
+                    placeholder={`Y${index + 1}`}
+                    onChange={(e) => handlePointChange(index, "y", e.target.value)}
+                  />
+                </div>
+              ))}
+            </div>
+            <input type="number" value={X1target} step="any" placeholder="Input X1" onChange={handleX1target} />
+
+            <div className="button-container">
+              <button type="submit" className="calculate">Calculate</button>
+              <button type="button" className="calculate" onClick={ResetNew}>Reset</button>
+            </div>
           </div>
+          <h1>Predicted Value: {result.toFixed(6)}</h1>
+          <h2>Regression Equation: {regressionEquation}</h2>
+        </form>
+      </div>
+
+      <div className="results-container">
+        <div className="table-and-chart-graphical">
+          {calculated && (
+            <div className="chart-container-graphical">
+              <Plot
+                data={[
+                  {
+                    x: plotData.map(p => p.x),
+                    y: plotData.map(p => p.y),
+                    type: "scatter",
+                    mode: "lines",
+                    line: { color: "blue" },
+                    name: "Regression Line",
+                  },
+                  {
+                    x: points.map(p => parseFloat(p.x)),
+                    y: points.map(p => parseFloat(p.y)),
+                    type: "scatter",
+                    mode: "markers",
+                    marker: { color: "red" },
+                    name: "Data Points",
+                  },
+                ]}
+                layout={{
+                  title: "Simple Regression Line",
+                  xaxis: { title: "X1" },
+                  yaxis: { title: "Y" },
+                }}
+              />
+            </div>
+          )}
         </div>
-        <h1>Predicted Value: {result.toFixed(6)}</h1>
-        <h2>Regression Equation: {regressionEquation}</h2>
-      </form>
-
-      {/* Plotly Graph */}
-      <Plot
-        data={[
-          {
-            x: plotData.map(p => p.x),
-            y: plotData.map(p => p.y),
-            type: "scatter",
-            mode: "markers",
-            marker: { color: "blue" },
-            name: "Regression Line",
-          },
-          {
-            x: points.map(p => parseFloat(p.x)),
-            y: points.map(p => parseFloat(p.y)),
-            type: "scatter",
-            mode: "markers",
-            marker: { color: "red" },
-            name: "Data Points",
-          },
-        ]}
-        layout={{
-          title: "Simple Regression Line",
-          xaxis: { title: "X1" },
-          yaxis: { title: "Y" },
-        }}
-      />
+      </div>
     </div>
   );
 }

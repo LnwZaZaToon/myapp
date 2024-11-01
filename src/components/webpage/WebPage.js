@@ -47,6 +47,7 @@ function WebPage() {
               <NavLink to="/linearspline" onClick={() => handleReload('/linearspline')}>LinearSpline</NavLink>
               <NavLink to="/linearregression" onClick={() => handleReload('/linearregression')}>Linear Regression</NavLink>
               <NavLink to="/multipleregression" onClick={() => handleReload('/multipleregression')}>multipleregression</NavLink>
+              <NavLink to="/polynomial" onClick={() => handleReload('/polynomial')}>Polynomialregression</NavLink>
               
               
             </div>

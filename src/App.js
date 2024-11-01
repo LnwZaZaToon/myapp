@@ -34,6 +34,7 @@ import JacobiMethod from './components/linearalgebra/jacobi';
 import LinearSpline from './components/Interpolation/linearspline';
 import MultipleRegression from './components/regression/MultipleRegression';
 import LinearRegression from './components/regression/LinearRegression';
+import PolynomialRegression from './components/regression/PolynomailRegression';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 function App() {
@@ -65,6 +66,7 @@ function App() {
           <Route exact path="/newtonInterpolation" element={<NewtonInter/>} />
           <Route exact path="/linearspline" element={<LinearSpline/>} />
           <Route exact path="/linearregression" element={<LinearRegression/>} />
+          <Route exact path="/polynomial" element={<PolynomialRegression/>} />
           <Route exact path="/multipleregression" element={<MultipleRegression/>} />
           <Route exact path="/Trapzoidal" element={<Trapzoidal/>} />
           <Route exact path="/CompositeTrapzoidal" element={<CompositeTrapzoidal/>} />

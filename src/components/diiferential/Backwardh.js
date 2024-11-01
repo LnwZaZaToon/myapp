@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState , useEffect} from 'react';
 import { evaluate, derivative } from 'mathjs';
 
 function Backwardh() {
@@ -9,6 +9,54 @@ function Backwardh() {
     const [resultNormal, setResultNormal] = useState(0);
     const [Err, setErr] = useState(0);
     const [Degree, setDegree] = useState(1);
+    const [data, setData] = useState([]);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await fetch('http://localhost:4000/api/Diff');
+                const result = await res.json();
+
+                const filteredResult = result.filter(item => item.methodType === "Backwardh");
+                setData(filteredResult);
+
+                console.log(filteredResult);
+            } catch (error) {
+                console.log("Error fetching data:", error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    const PostDataBase = async (e) => {
+        e.preventDefault();
+        const response = await fetch('http://localhost:4000/api/Add-Diff', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                methodType: "Backwardh",
+                equation: Func,
+                x: parseFloat(X),
+                h: parseFloat(H),
+                degree: Degree,
+                answer1: parseFloat(result),
+                answer2: parseFloat(resultNormal),
+                err: parseFloat(Err)
+            }),
+        });
+
+        const dbResult = await response.json();
+        console.log('Response Status:', response.status);
+        console.log('Result from API:', dbResult);
+
+        if (!response.ok) {
+            console.error('Failed to save equation:', dbResult.message);
+            alert("Fail");
+            return;
+        }
+        alert("Success");
+    };
+
 
     const Calculate = (e) => {
         e.preventDefault();
@@ -71,6 +119,31 @@ function Backwardh() {
         const count = parseInt(e.target.value, 10);
         setDegree(count);
     };
+    const ResetNew = () => {
+        setX(0)
+        setH(0)
+        setResultNormal(0)
+        setResult(0)
+        setErr(0)
+    }
+    const handleOptionChangeFunc = async (e) => {
+        const selectedEquation = e.target.value;
+        const selected = data.find(item => item.equation === selectedEquation);
+
+        if (selected) {
+            console.log("Selected err:", selected.err);
+            setFunc(selected.equation);
+            setX(selected.x)
+            setH(selected.h)
+            setDegree(selected.degree)
+            setResult(selected.answer1)
+            setResultNormal(selected.answer2)
+            setErr(selected.err)
+
+        } else {
+            console.error("Selected equation not found in data.");
+        }
+    };
 
     return (
         <div>
@@ -78,7 +151,7 @@ function Backwardh() {
                 <form onSubmit={Calculate}>
                     <div className="form-container">
                         <div className="form-title" >
-                            <h1 >Bisection Method Calculator</h1>
+                            <h1 >Backwardh Method Calculator</h1>
                         </div>
                         <div className='FormContainer'>
                             <select onChange={handleDegree}>
@@ -91,8 +164,18 @@ function Backwardh() {
                             <input type='number' step='any' value={X} onChange={HandleX} placeholder='input x' />
                             <input type='number' step='any' value={H} onChange={HandleH} placeholder='input h' />
                         </div>
-                        <div className='FormButton'>
-                            <button type='submit'>Calculate</button>
+                        <select onChange={handleOptionChangeFunc} className="option-form">
+                            <option value={null}>Equation example</option>
+                            {data.map((data) => (
+                                <option key={data.id}>
+                                    {`${data.equation}`}
+                                </option>
+                            ))}
+                        </select>
+                        <div className='button-container'>
+                            <button type='submit' className="calculate" >Calculate</button>
+                            <button type="button" className="calculate" onClick={ResetNew}>Reset</button>
+                            <button type="button" className="calculate" onClick={PostDataBase}>Add Database</button>
                         </div>
                         <div className='Answer'>
                             <h2>Answer of Backward Difference: {result.toFixed(6)}</h2>

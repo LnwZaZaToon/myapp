@@ -1,11 +1,57 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import './styleLinear.css';
 
 const ConjugateGradientMethod = () => {
   const [numRows, setNumRows] = useState(2);
   const [matrix, setMatrix] = useState([]);
   const [result, setResult] = useState([]);
+  const [data, setData] = useState([]);
+  const [showMatrix, setShowMatrix] = useState(false);
+  const [calculated, setCalculated] = useState(false);
   const maxMatrixSize = 10;
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch('http://localhost:4000/api/Gauss');
+        const result = await res.json();
+
+        //เช็คว่า type เหมือนกันไหม
+        const filteredResult = result.filter(item => item.methodType === "conjugate");
+        setData(filteredResult);
+
+        console.log(filteredResult);
+      } catch (error) {
+        console.log("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const PostDataBase = async (e) => {
+    e.preventDefault();
+    const response = await fetch('http://localhost:4000/api/Add-Gauss', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        methodType: "conjugate",
+        equation: matrix,
+        size: numRows,
+        answer: result,
+      }),
+    });
+
+    const dbResult = await response.json();
+    console.log('Response Status:', response.status);
+    console.log('Result from API:', dbResult);
+
+    if (!response.ok) {
+      console.error('Failed to save equation:', dbResult.message);
+      alert("Fail")
+      return;
+    }
+    alert("Success")
+  }
 
   const handleNumRowsChange = (event) => {
     const newNumRows = parseInt(event.target.value);
@@ -19,9 +65,10 @@ const ConjugateGradientMethod = () => {
 
   const handleGenerateMatrix = () => {
     const newMatrix = Array.from({ length: numRows }, () => {
-      return Array.from({ length: numRows + 1 }, () => ""); 
+      return Array.from({ length: numRows + 1 }, () => "");
     });
     setMatrix(newMatrix);
+    setShowMatrix(true)
   };
 
   const handleInputChange = (event, row, col) => {
@@ -32,7 +79,7 @@ const ConjugateGradientMethod = () => {
 
   const handleCalculate = () => {
     const A = matrix.map((row) => row.map((value) => parseFloat(value)));
-    
+
     const n = A.length;
     const maxIterations = 100;
     const errorTolerance = 1e-6;
@@ -85,6 +132,7 @@ const ConjugateGradientMethod = () => {
     }
 
     setResult(result);
+    setCalculated(true);
   };
 
   const renderTable = () => {
@@ -102,6 +150,32 @@ const ConjugateGradientMethod = () => {
       </div>
     ));
   };
+  const ResetMatrix = () => {
+    setNumRows(2);
+    setMatrix([]);
+    setResult([]);
+    setShowMatrix(false);
+    setCalculated(false);
+  };
+  const handleOptionChangeFunc = async (e) => {
+    const selectedEquation = e.target.value;
+    const selected = data.find(item => item.equation.toString() === selectedEquation);
+
+    if (selected) {
+      console.log("Selected equation:", selected.equation);
+      console.log("Selected table:", selected.table);
+      console.log("Selected result:", selected.answer);
+
+      setNumRows(selected.size);
+      setMatrix(selected.equation);
+      setResult(selected.answer)
+      setCalculated(true);
+      setShowMatrix(true);
+
+    } else {
+      console.error("Selected equation not found in data.");
+    }
+  };
 
   return (
     <div className="calculator-container">
@@ -116,21 +190,32 @@ const ConjugateGradientMethod = () => {
           onChange={handleNumRowsChange}
           className="num-rows-input"
         />
-        <button className="calculate" onClick={handleGenerateMatrix}>
-          Generate Matrix
-        </button>
-      </div>
-      {matrix.length > 0 && (
-        <div className="matrix-container">
-          {renderTable()}
-          <button className="calculate" onClick={handleCalculate}>
-            Calculate
-          </button>
+        <select onChange={handleOptionChangeFunc} className="option-form">
+          <option value={null}>Equation example</option>
+          {data.map((data) => (
+            <option key={data.id}>
+              {`${data.equation}`}
+            </option>
+          ))}
+        </select>
+        <div className="button-container">
+          <button type="submit" className="calculate" onClick={handleGenerateMatrix}>Generate Matrix</button>
+          <button type="button" className="calculate" onClick={ResetMatrix}>Reset</button>
         </div>
-      )}
-      {result.length > 0 && (
-        <div className="result-container">
+      </div>
+      <div className="matrix-container">
+        {showMatrix && renderTable()}
+      </div>
+      <div className="button-container">
+        {showMatrix && (<button type="submit" onClick={handleCalculate} className="calculate">Calculate</button>)}
+        {showMatrix && (<button type="button" onClick={PostDataBase} className="calculate">add database</button>)}
+      </div>
+
+      {calculated && (
+
+        <div className="table">
           <table>
+
             <thead>
               <tr>
                 <th>Iteration</th>
@@ -151,8 +236,10 @@ const ConjugateGradientMethod = () => {
                 </tr>
               ))}
             </tbody>
+
           </table>
         </div>
+
       )}
     </div>
   );
