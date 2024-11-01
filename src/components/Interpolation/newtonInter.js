@@ -57,51 +57,55 @@ function NewtonInter() {
     };
 
     return (
-        <div>
-            <h1 className="form-title">Newton Interpolation</h1>
-            <form>
-                <div className="inputPoint">
-                    <select value={pointCount} onChange={handlePointCountChange}>
-                        <option value={2}>2 Points</option>
-                        <option value={3}>3 Points</option>
-                        <option value={5}>5 Points</option>
-                    </select>
+        <div className="calculator-container">
+            <div className="form-container">
+                <div className="form-title" >
+                    <h1 >Lagrange Method Calculator</h1>
                 </div>
-            </form>
-
-            <form onSubmit={Calculate}>
-                <div className="formcontainer">
-                    <div>
-                        {points.map((point, index) => (
-                            <div key={index} className="pointInputs" style={{ display: 'flex' }}>
-                                <input
-                                    type="number"
-                                    value={point.x}
-                                    step="any"
-                                    placeholder={`x${index + 1}`}
-                                    onChange={(e) => handlePointChange(index, "x", e.target.value)}
-                                />
-                                <input
-                                    type="number"
-                                    value={point.y}
-                                    step="any"
-                                    placeholder={`y${index + 1}`}
-                                    onChange={(e) => handlePointChange(index, "y", e.target.value)}
-                                />
-                            </div>
-                        ))}
+                <form>
+                    <div className="inputPoint">
+                        <select value={pointCount} onChange={handlePointCountChange}>
+                            <option value={2}>2 Points</option>
+                            <option value={3}>3 Points</option>
+                            <option value={5}>5 Points</option>
+                        </select>
                     </div>
-                    <input type="number" value={Xtarget} step="any" placeholder="Input x" onChange={handleXtarget} />
+                </form>
 
-                    <div className="ButtonCon">
-                        <button type="submit" className="calculate">Calculate</button>
-                        <button type="button" className="calculate" onClick={ResetNew}>Reset</button>
+                <form onSubmit={Calculate}>
+                    <div className="formcontainer">
+                        <div>
+                            {points.map((point, index) => (
+                                <div key={index} className="pointInputs" style={{ display: 'flex' }}>
+                                    <input
+                                        type="number"
+                                        value={point.x}
+                                        step="any"
+                                        placeholder={`x${index + 1}`}
+                                        onChange={(e) => handlePointChange(index, "x", e.target.value)}
+                                    />
+                                    <input
+                                        type="number"
+                                        value={point.y}
+                                        step="any"
+                                        placeholder={`y${index + 1}`}
+                                        onChange={(e) => handlePointChange(index, "y", e.target.value)}
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                        <input type="number" value={Xtarget} step="any" placeholder="Input x" onChange={handleXtarget} />
+
+                        <div className="ButtonCon">
+                            <button type="submit" className="calculate">Calculate</button>
+                            <button type="button" className="calculate" onClick={ResetNew}>Reset</button>
+                        </div>
                     </div>
-                </div>
-                <button type="button" className="calculate" onClick={logData}>Log</button>
-                <h1>Answer: {result.toFixed(6)}</h1>
-            </form>
+                    <h1>Answer: {result.toFixed(6)}</h1>
+                </form>
+            </div>
         </div>
+
     );
 }
 

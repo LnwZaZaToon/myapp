@@ -1,15 +1,15 @@
 import React, { useState } from "react";
-import { det } from "mathjs";
 import './styleLinear.css';
 
-const CramerRule = () => {
+const JacobiMethod = () => {
   const [numRows, setNumRows] = useState(2);
-  const [matrix, setMatrix] = useState([]
-  );
+  const [matrix, setMatrix] = useState([]);
   const [result, setResult] = useState([]);
-  const [showMatrix, setShowMatrix] = useState(false); // New state to control matrix visibility
+  const [showMatrix, setShowMatrix] = useState(false);
   const [calculated, setCalculated] = useState(false);
   const maxMatrixSize = 10;
+  const tolerance = 1e-6; // Convergence threshold
+  const maxIterations = 100; // Maximum number of iterations
 
   const handleNumRowsChange = (event) => {
     const newNumRows = parseInt(event.target.value);
@@ -32,8 +32,8 @@ const CramerRule = () => {
     setMatrix([]);
     setResult([]);
     setShowMatrix(false);
-    setCalculated(false)
-  }
+    setCalculated(false);
+  };
 
   const handleInputChange = (event, row, col) => {
     const newMatrix = [...matrix];
@@ -42,7 +42,6 @@ const CramerRule = () => {
   };
 
   const handleCalculate = () => {
-
     const matrixA = [];
     const matrixB = [];
 
@@ -54,28 +53,37 @@ const CramerRule = () => {
       matrixB[i] = parseFloat(matrix[i][numRows]);
     }
 
-    const detA = det(matrixA);
+    let solutions = Array(numRows).fill(0); // Initial guess
+    let prevSolutions = Array(numRows).fill(0);
+    let converged = false;
 
-    if (detA === 0) {
-      alert("The determinant is zero. The system may have no solution or infinitely many solutions.");
-      return;
-    }
+    for (let iteration = 0; iteration < maxIterations && !converged; iteration++) {
+      converged = true;
+      for (let i = 0; i < numRows; i++) {
+        let sum = matrixB[i];
+        for (let j = 0; j < numRows; j++) {
+          if (i !== j) {
+            sum -= matrixA[i][j] * prevSolutions[j];
+          }
+        }
+        solutions[i] = sum / matrixA[i][i];
 
-    const detX = [];
-    for (let i = 0; i < matrixB.length; i++) {
-      const newArr2D = JSON.parse(JSON.stringify(matrixA));
-      for (let j = 0; j < matrixA.length; j++) {
-        newArr2D[j][i] = matrixB[j];
+        // Check for convergence
+        if (Math.abs(solutions[i] - prevSolutions[i]) > tolerance) {
+          converged = false;
+        }
       }
-      detX.push(det(newArr2D));
+
+      // Update previous solutions for the next iteration
+      prevSolutions = [...solutions];
     }
 
-    const solutions = detX.map((det, index) => {
-      return det / detA;
-    });
-
-    setResult(solutions);
-    setCalculated(true)
+    if (!converged) {
+      alert("Jacobi method did not converge within the maximum iterations.");
+    } else {
+      setResult(solutions);
+      setCalculated(true);
+    }
   };
 
   const renderTable = () => {
@@ -104,7 +112,7 @@ const CramerRule = () => {
 
   const handleGenerateMatrix = (e) => {
     e.preventDefault();
-    const newMatrix = Array.from({ length: numRows }, () => Array.from({ length: numRows + 1 }, () => ""))
+    const newMatrix = Array.from({ length: numRows }, () => Array.from({ length: numRows + 1 }, () => ""));
     setMatrix(newMatrix);
     setShowMatrix(true);
   };
@@ -113,8 +121,8 @@ const CramerRule = () => {
     <div className="calculator-container">
       <form onSubmit={handleGenerateMatrix}>
         <div className="form-container">
-          <div className="form-title" >
-            <h1 >Cramer Rule</h1>
+          <div className="form-title">
+            <h1>Jacobi Method</h1>
           </div>
           <div>
             <input type="number" value={numRows} onChange={handleNumRowsChange} />
@@ -126,7 +134,7 @@ const CramerRule = () => {
         </div>
       </form>
       <div className="matrix-container">
-        {showMatrix && renderTable ()}
+        {showMatrix && renderTable()}
       </div>
       <div className="button-container">
         {showMatrix && (<button type="submit" onClick={handleCalculate} className="calculate">Calculate</button>)}
@@ -135,7 +143,7 @@ const CramerRule = () => {
         <div className="result-container">
           {result.map((res, index) => (
             <div key={index} className="result">
-              {`x${index + 1} = ${res}`}
+              {`x${index + 1} = ${res.toFixed(6)}`}
             </div>
           ))}
         </div>
@@ -144,4 +152,4 @@ const CramerRule = () => {
   );
 };
 
-export default CramerRule;
+export default JacobiMethod;

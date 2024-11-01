@@ -25,7 +25,7 @@ function CompositeSimpson() {
             setError("N must be even.");
             return;
         }
-        let h = ((b - a) / n)/2;
+        let h = ((b - a) / n) / 2;
         let I = (h / 3) * (F(a) + F(b) + 4 * SumOdd(n, a, h) + 2 * SumEven(n, a, h));
         console.log(h)
         let real = RealValue(a, b);
@@ -84,22 +84,30 @@ function CompositeSimpson() {
 
     return (
         <div>
-            <form onSubmit={Calculate}>
-                <div className='FormContainer'>
-                    <input type='text' step="any" value={Func} onChange={handleFunc} placeholder='Input function' />
-                    <input type='number' step="any" value={A} onChange={HandleA} placeholder='Input a' />
-                    <input type='number' step="any" value={B} onChange={HandleB} placeholder='Input b' />
-                    <input type='number' step="1" value={N} onChange={handleN} placeholder='Input N (even)' />
-                    {error && <p style={{ color: 'red' }}>{error}</p>} {/* Show error if N is not even */}
-                </div>
-                <div className='FormButton'>
-                    <button type='submit' disabled={!!error}>Calculate</button> {/* Disable button if there's an error */}
-                </div>
-            </form>
-            <div className='Answer'>
-                <h2>Answer of Simpson: {resultSimpson.toFixed(2)}</h2>
-                <h2>Answer of Exact value: {resultNormal.toFixed(2)}</h2>
-                <h2>Error: {Err.toFixed(2)}%</h2>
+            <div className="calculator-container">
+                <form onSubmit={Calculate}>
+                    <div className="form-container">
+                        <div className="form-title" >
+                            <h1 >Bisection Method Calculator</h1>
+                        </div>
+                        <div className='FormContainer'>
+                            <input type='text' step="any" value={Func} onChange={handleFunc} placeholder='Input function' />
+                            <input type='number' step="any" value={A} onChange={HandleA} placeholder='Input a' />
+                            <input type='number' step="any" value={B} onChange={HandleB} placeholder='Input b' />
+                            <input type='number' step="1" value={N} onChange={handleN} placeholder='Input N (even)' />
+                            {error && <p style={{ color: 'red' }}>{error}</p>} {/* Show error if N is not even */}
+                        </div>
+                        <div className='FormButton'>
+                            <button type='submit' disabled={!!error}>Calculate</button> {/* Disable button if there's an error */}
+                        </div>
+                        <div className='Answer'>
+                            <h2>Answer of Simpson: {resultSimpson.toFixed(2)}</h2>
+                            <h2>Answer of Exact value: {resultNormal.toFixed(2)}</h2>
+                            <h2>Error: {Err.toFixed(2)}%</h2>
+                        </div>
+                    </div>
+                </form>
+
             </div>
         </div>
     );

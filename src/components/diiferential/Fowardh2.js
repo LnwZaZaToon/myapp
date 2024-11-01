@@ -1,7 +1,7 @@
 
 import { useState } from 'react'
 import { evaluate, derivative } from 'mathjs';
-
+import './styleDiff.css';
 function Fowardh2() {
     const [Func, setFunc] = useState("e^(x/3)+x^2");
     const [X, setX] = useState(-2.5);
@@ -78,28 +78,34 @@ function Fowardh2() {
     }
     return (
         <div>
-            <form onSubmit={Calculate}>
-                <div className='FormContainer'>
-                    <select onChange={handleDegree}>
-                        <option value={1}>1 derivative</option>
-                        <option value={2}>2 derivatives</option>
-                        <option value={3}>3 derivatives</option>
-                        <option value={4}>4 derivatives</option>
-                    </select>
-                    <input type='String' step="any" value={Func} onChange={handleFunc} placeholder='input function' />
-                    <input type='number' step="any" onChange={HandleX} placeholder='input x' />
-                    <input type='number' step="any" onChange={HandleH} placeholder='input h' />
-                </div>
-                <div className='FormButton'>
-                    <button type='submit'>Calculate</button>
-                </div>
-            </form>
-            <div className='Answer'>
-                <h2>Answer of Foward {result.toFixed(5)}</h2>
-                <h2>Answer of Exact value {resultNormal.toFixed(5)}</h2>
-                <h2>Error {Err.toFixed(5)}%</h2>
+            <div className="calculator-container">
+                <form onSubmit={Calculate}>
+                    <div className="form-container">
+                        <div className="form-title" >
+                            <h1 >Bisection Method Calculator</h1>
+                        </div>
+                        <div className='FormContainer'>
+                            <select onChange={handleDegree}>
+                                <option value={1}>1 derivative</option>
+                                <option value={2}>2 derivatives</option>
+                                <option value={3}>3 derivatives</option>
+                                <option value={4}>4 derivatives</option>
+                            </select>
+                            <input type='String' step="any" value={Func} onChange={handleFunc} placeholder='input function' />
+                            <input type='number' step="any" onChange={HandleX} placeholder='input x' />
+                            <input type='number' step="any" onChange={HandleH} placeholder='input h' />
+                        </div>
+                        <div className='FormButton'>
+                            <button type='submit'>Calculate</button>
+                        </div>
+                        <div className='Answer'>
+                            <h2>Answer of Foward {result.toFixed(5)}</h2>
+                            <h2>Answer of Exact value {resultNormal.toFixed(5)}</h2>
+                            <h2>Error {Err.toFixed(5)}%</h2>
+                        </div>
+                    </div>
+                </form>
             </div>
-
         </div>
     );
 

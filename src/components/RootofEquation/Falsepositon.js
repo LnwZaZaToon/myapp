@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import './bisection.css';
 import { evaluate } from 'mathjs';
 import { Chart as ChartJS } from "chart.js/auto";
@@ -14,6 +14,55 @@ function Falseposition() {
   const [data, setData] = useState([]);
   const [calculated, setCalculated] = useState(false);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch('http://localhost:4000/api/equations');
+        const result = await res.json();
+
+        //เช็คว่า type เท่ากันไหม
+        const filteredResult = result.filter(item => item.methodType === "Falseposition");
+        setData(filteredResult);
+
+        console.log(filteredResult);
+      } catch (error) {
+        console.log("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const PostDataBase = async (e) => {
+    e.preventDefault();
+    const response = await fetch('http://localhost:4000/api/Add-equations', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        methodType: "Falseposition",
+        func,
+        xL: parseFloat(xL),
+        xR: parseFloat(xR),
+        table: table,
+        epsilon: parseFloat(epsilon),
+        answer: parseFloat(result)
+      }),
+    });
+
+    const dbResult = await response.json();
+    console.log('Response Status:', response.status);
+    console.log('Result from API:', dbResult);
+
+    if (!response.ok) {
+      console.error('Failed to save equation:', dbResult.message);
+      alert("Fail")
+      return;
+    }
+    alert("Success")
+  }
+
+
+
   const Calculate = (e) => {
     e.preventDefault()
     let xl = parseFloat(xL);
@@ -26,6 +75,7 @@ function Falseposition() {
     while (error > eps) {
       xold = xm
       if (F(xl) * F(xr) > 0) {
+        alert("this interval has no answer")
         break;
       }
       xm = Formula(xl, xr)
@@ -87,9 +137,27 @@ function Falseposition() {
     setTable([]);
   }
 
-  const handleOptionChangeFunc = (e) => {
-    setfunc(e.target.value);
-  }
+  const handleOptionChangeFunc = async (e) => {
+    const selectedEquation = e.target.value;
+    const selected = data.find(item => item.equation === selectedEquation);
+
+    if (selected) {
+      console.log("Selected equation:", selected.equation);
+      console.log("Selected xL:", selected.xl);
+      console.log("Selected xR:", selected.xr);
+      console.log("Selected table:", selected.table);
+      console.log("Selected result:", selected.answer);
+
+      setfunc(selected.equation);
+      setxL(selected.xl);
+      setxR(selected.xr);
+      setTable(selected.table || []);
+      setResult(selected.answer || 0);
+      setCalculated(true);
+    } else {
+      console.error("Selected equation not found in data.");
+    }
+  };
 
   return (
     <div className="calculator-container">
@@ -119,8 +187,11 @@ function Falseposition() {
           <div className="button-container">
             <button type="submit" className="calculate">Calculate</button>
             <button type="button" className="calculate" onClick={ResetNew}>Reset</button>
+            <button type="button" className="calculate" onClick={PostDataBase}>Add Database</button>
           </div>
-          <h1>Answer: {result.toFixed(6)}</h1>
+          <div className="answer">
+            <h1>Answer: {result.toFixed(6)}</h1>
+          </div>
         </div>
       </form>
 

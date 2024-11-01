@@ -72,6 +72,13 @@
   width: 100%;
   gap: 20px; /* Space between table and chart */
 }
+
+.table-and-chart-graphical {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  gap: 20px; /* Space between table and chart */
+}
 .table th {
   background-color: #f2f2f2;
   color: #333;
@@ -116,6 +123,17 @@
   padding: 20px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
+
+.chart-container-graphical {
+  width: 100%; /* Adjust as needed */
+  height: 100%; /* Chart height matches the container */
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
 
 .chart-container canvas {
   height: 100%; /* Matches chart height to the container */

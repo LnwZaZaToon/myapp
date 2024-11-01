@@ -32,6 +32,11 @@ function WebPage() {
               <NavLink to="/gaussian" onClick={() => handleReload('/gaussian')}>Gaussian Elimination</NavLink>
               <NavLink to="/gaussianjordan" onClick={() => handleReload('/gaussianjordan')}>Gaussian Elimination Jordan</NavLink>
               <NavLink to="/matrixinversion" onClick={() => handleReload('/matrixinversion')}>Matrix Inversion</NavLink>
+              <NavLink to="/LU_Decompose" onClick={() => handleReload('/LU_Decompose')}>LU Decompose</NavLink>
+              <NavLink to="/Choleskey_Decompose" onClick={() => handleReload('/Choleskey_Decompose')}>Choleskey Decompose</NavLink>
+              <NavLink to="/jacobi" onClick={() => handleReload('jacobi')}>Jacobi Method</NavLink>
+              <NavLink to="/gaussseidal" onClick={() => handleReload('/gaussseidal')}>Gauss Seidal </NavLink>
+              <NavLink to="/conjugate" onClick={() => handleReload('/conjugate')}>ConjugateGradient</NavLink>
             </div>
           </div>
           <div className="dropdown">
@@ -39,8 +44,15 @@ function WebPage() {
             <div className="dropdown-content">
               <NavLink to="/lagrange" onClick={() => handleReload('/lagrange')}>Lagrange</NavLink>
               <NavLink to="/newtonInterpolation" onClick={() => handleReload('/newtonInterpolation')}>Newton</NavLink>
+              <NavLink to="/linearspline" onClick={() => handleReload('/linearspline')}>LinearSpline</NavLink>
+              <NavLink to="/linearregression" onClick={() => handleReload('/linearregression')}>Linear Regression</NavLink>
+              <NavLink to="/multipleregression" onClick={() => handleReload('/multipleregression')}>multipleregression</NavLink>
+              
+              
             </div>
           </div>
+
+
           <div className="dropdown">
             <a href="#"><li>Integral</li></a>
             <div className="dropdown-content">

@@ -1,15 +1,17 @@
 import { useState } from "react";
-
+import './styleLinear.css';
 function GaussianJordan() {
     const [Row, setRow] = useState(2);
     const [Col, setCol] = useState(2);
     const [result, setResult] = useState([]);
     const [Matrix, setMatrix] = useState([]);
-
+    const [calculated, setCalculated] = useState(false);
+    const [showMatrix, setShowMatrix] = useState(false);
     const GenerRateMatrix = (e) => {
         e.preventDefault();
         const newMatrix = Array.from({ length: Row }, () => Array.from({ length: Col + 1 }, () => ""));
         setMatrix(newMatrix);
+        setShowMatrix(true);
     }
 
     const inputRowCol = (e) => {
@@ -28,6 +30,8 @@ function GaussianJordan() {
         setCol(2);
         setResult([]);
         setMatrix([]);
+        setCalculated(false);
+        setShowMatrix(false);
     };
 
     const Calculate = () => {
@@ -58,13 +62,16 @@ function GaussianJordan() {
         }
 
         setResult(X)
+        setCalculated(true)
     };
 
     return (
-        <div>
-            <h1 className="form-title">Gaussian Elimination Jordan</h1>
+        <div className="calculator-container">
             <form onSubmit={GenerRateMatrix}>
-                <div className="formcontainer">
+                <div className="form-container">
+                    <div className="form-title" >
+                        <h1 >Gaussian Elimination Jordan</h1>
+                    </div>
                     <div>
                         <input
                             type="number"
@@ -83,37 +90,42 @@ function GaussianJordan() {
                         </button>
                     </div>
                 </div>
-                {Matrix.length > 0 && (
-                    <div>
-                        <h3>Enter Matrix Values</h3>
-                        <div className="matrix-container">
-                            {Matrix.map((row, rowIndex) => (
-                                <div key={rowIndex} className="matrix-row">
-                                    {row.map((val, colIndex) => (
-                                        <input
-                                            key={`${rowIndex}-${colIndex}`}
-                                            type="number"
-                                            value={val}
-                                            onChange={(e) =>
-                                                handleMatrixChange(rowIndex, colIndex, e.target.value)
-                                            }
-                                            className="matrix-input"
-                                        />
-                                    ))}
-                                </div>
-                            ))}
-                            <button type="button" className="calculate" onClick={Calculate}>
-                                Calculate
-                            </button>
-                        </div>
+            </form >
+            {Matrix.length && showMatrix > 0 && (
+                <div>
+                    <h3>Enter Matrix Values</h3>
+                    <div className="matrix-container">
+                        {Matrix.map((row, rowIndex) => (
+                            <div key={rowIndex} className="matrix-row">
+                                {row.map((val, colIndex) => (
+                                    <input
+                                        key={`${rowIndex}-${colIndex}`}
+                                        type="number"
+                                        value={val}
+                                        onChange={(e) =>
+                                            handleMatrixChange(rowIndex, colIndex, e.target.value)
+                                        }
+                                        className="matrix-input"
+                                    />
+                                ))}
+                            </div>
+                        ))}
                     </div>
-                )}
+                </div>
+            )}
+            <div className="button-container">
+                {showMatrix && (<button type="button" onClick={Calculate} className="calculate">Calculate</button>)}
+            </div>
+
+            {calculated && (
                 <div className="result-container">
                     {result.map((res, index) => (
-                        <div key={index} className="result">{`x${index + 1} = ${res.toFixed(6)}`}</div>
+                        <div key={index} className="result">
+                            {`x${index + 1} = ${res}`}
+                        </div>
                     ))}
                 </div>
-            </form>
+            )}
         </div>
     );
 }

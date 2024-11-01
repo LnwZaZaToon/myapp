@@ -27,7 +27,15 @@ import Fowardh2 from './components/diiferential/Fowardh2';
 import Backwardh2 from './components/diiferential/ฺBackwardh2';
 import Centralh4 from './components/diiferential/Centralh4';
 import Footer from './components/webpage/Footer';
+import LU_Decompose from './components/linearalgebra/LUDecomposition';
+import CholeskyDecompose from './components/linearalgebra/CholeskyDecomposition';
+import GaussSeidel from './components/linearalgebra/gaussseidal';
+import JacobiMethod from './components/linearalgebra/jacobi';
+import LinearSpline from './components/Interpolation/linearspline';
+import MultipleRegression from './components/regression/MultipleRegression';
+import LinearRegression from './components/regression/LinearRegression';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
 function App() {
   return (
     <div className="app-wrapper">
@@ -48,8 +56,16 @@ function App() {
           <Route exact path="/gaussian" element={<Gaussian/>} />   
           <Route exact path="/gaussianjordan" element={<GaussianEliminationJordan/>} />   
           <Route exact path="/matrixinversion" element={<MatrixInversion/>} /> 
+          <Route exact path="/LU_Decompose" element={<LU_Decompose/>} /> 
+          <Route exact path="/Choleskey_Decompose" element={<CholeskyDecompose/>} /> 
+          <Route exact path="/jacobi" element={<JacobiMethod/>} /> 
+          <Route exact path="/gaussseidal" element={<GaussSeidel/>} /> 
+          <Route exact path="/conjugate" element={<ConjugateGradientMethod/>} /> 
           <Route exact path="/lagrange" element={<Largarnge/>} /> 
           <Route exact path="/newtonInterpolation" element={<NewtonInter/>} />
+          <Route exact path="/linearspline" element={<LinearSpline/>} />
+          <Route exact path="/linearregression" element={<LinearRegression/>} />
+          <Route exact path="/multipleregression" element={<MultipleRegression/>} />
           <Route exact path="/Trapzoidal" element={<Trapzoidal/>} />
           <Route exact path="/CompositeTrapzoidal" element={<CompositeTrapzoidal/>} />
           <Route exact path="/Simpson" element={<Simpson/>} />

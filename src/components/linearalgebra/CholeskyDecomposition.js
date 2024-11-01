@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import "./styles.css";
+import './styleLinear.css';
 
-const GaussJordan = () => {
+const CholeskyDecompose = () => {
   const [numRows, setNumRows] = useState(2);
+  const [calculated, setCalculated] = useState(false);
+  const [showMatrix, setShowMatrix] = useState(false);
   const [matrix, setMatrix] = useState(
     Array.from({ length: numRows }, () =>
       Array.from({ length: numRows + 1 }, () => "")
@@ -13,11 +15,10 @@ const GaussJordan = () => {
 
   const handleNumRowsChange = (event) => {
     const newNumRows = parseInt(event.target.value);
-
     if (newNumRows >= 1 && newNumRows <= maxMatrixSize) {
       setNumRows(newNumRows);
       setMatrix(
-        Array.from ({ length: newNumRows }, () =>
+        Array.from({ length: newNumRows }, () =>
           Array.from({ length: newNumRows + 1 }, () => "")
         )
       );
@@ -33,31 +34,69 @@ const GaussJordan = () => {
   };
 
   const handleCalculate = () => {
-    const A = matrix.map((row) =>
-      row.map((value) => parseFloat(value))
+    const A = matrix.map((row) => row.slice(0, -1).map((value) => parseFloat(value)));
+    const B = matrix.map((row) => parseFloat(row[row.length - 1]));
+    if (!isSymmetricAndPositiveDefinite(A)) {
+      alert("not sysmemtric");
+      return;
+    }
+    let L = Array.from({ length: A.length }, () =>
+      Array.from({ length: A.length }, () => 0)
     );
 
-    let X = [];
-    let Ratio;
-    for (var i = 0; i < A.length; i++) {
-      if (A[i][i] === 0.0) {
-        console.log("Matrix Error!!");
-        break;
-      }
-      for (let j = 0; j < A.length; j++) {
-        if (i !== j) {
-          Ratio = A[j][i] / A[i][i];
+    // Cholesky decomposition
+    for (let i = 0; i < A.length; i++) {
+      for (let j = 0; j <= i; j++) {
+        let sum = 0;
+        for (let k = 0; k < j; k++) {
+          sum += L[i][k] * L[j][k];
+        }
 
-          for (let k = 0; k < A.length + 1; k++) {
-            A[j][k] = A[j][k] - Ratio * A[i][k];
-          }
+        if (i === j) {
+          L[i][j] = Math.sqrt(A[i][i] - sum);
+        } else {
+          L[i][j] = (A[i][j] - sum) / L[j][j];
         }
       }
     }
+
+    let Y = [];
     for (let i = 0; i < A.length; i++) {
-      X[i] = A[i][A.length] / A[i][i];
+      Y[i] = B[i];
+      for (let j = 0; j < i; j++) {
+        Y[i] -= L[i][j] * Y[j];
+      }
+      Y[i] /= L[i][i];
     }
-    setResult(X);
+
+    let resultX = [];
+    for (let i = A.length - 1; i >= 0; i--) {
+      resultX[i] = Y[i];
+      for (let j = i + 1; j < A.length; j++) {
+        resultX[i] -= L[j][i] * resultX[j];
+      }
+      resultX[i] /= L[i][i];
+    }
+
+    setResult(resultX);
+    setCalculated(true);
+  };
+  const isSymmetricAndPositiveDefinite = (matrix) => {
+    for (let i = 0; i < matrix.length; i++) {
+      for (let j = 0; j < matrix.length; j++) {
+        if (matrix[i][j] !== matrix[j][i]) {
+          return false;
+        }
+      }
+    }
+
+
+    for (let i = 0; i < matrix.length; i++) {
+      if (matrix[i][i] <= 0) {
+        return false;
+      }
+    }
+    return true;
   };
 
   const renderTable = () => {
@@ -84,31 +123,57 @@ const GaussJordan = () => {
     return rows;
   };
 
+  const handleGenerateMatrix = (e) => {
+    e.preventDefault();
+    const newMatrix = Array.from({ length: numRows }, () => Array.from({ length: numRows + 1 }, () => ""))
+    setMatrix(newMatrix);
+    setShowMatrix(true);
+  };
+
+  const ResetMatrix = () => {
+    setNumRows(2);
+    setMatrix([]);
+    setResult([]);
+    setShowMatrix(false);
+    setCalculated(false)
+  }
+
   return (
-    <div className="cholesky-decomposition">
-        <h2>Cholesky Decomposition Method</h2>
-        <input
-          type="number"
-          min="2"
-          value={numRows}
-          onChange={handleNumRowsChange}
-          className="num-rows-input"
-        />
-      <div className="matrix-container">
-        {renderTable()}
-        <button className="calculate-button" onClick={handleCalculate}>
-          Calculate
-        </button>
-      </div>
-      <div className="result-container">
-        {result.map((res, index) => (
-          <div key={index} className="result">
-            {`x${index + 1} = ${res}`}
+    <div className="calculator-container">
+      <form onSubmit={handleGenerateMatrix}>
+        <div className="form-container">
+          <div className="form-title">
+            <h1>Cholesky Decompose</h1>
           </div>
-        ))}
+          <div>
+            <input
+              type="number"
+              value={numRows}
+              onChange={handleNumRowsChange}
+              className="num-rows-input"
+            />
+          </div>
+          <div className="button-container">
+            <button type="submit" className="calculate">Generate Matrix</button>
+            <button type="button" className="calculate" onClick={ResetMatrix}>Reset</button>
+          </div>
+        </div>
+      </form>
+      <div className="matrix-container">
+        {showMatrix && renderTable()}
+        {showMatrix && (<button type="submit" onClick={handleCalculate} className="calculate">Calculate</button>)}
       </div>
+      {calculated && (
+        <div className="result-container">
+          {result.map((res, index) => (
+            <div key={index} className="result">
+              {`x${index + 1} = ${res}`}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
 
-export default GaussJordan;
+export default CholeskyDecompose;

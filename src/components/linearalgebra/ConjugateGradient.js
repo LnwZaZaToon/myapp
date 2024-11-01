@@ -1,29 +1,27 @@
 import React, { useState } from "react";
-
+import './styleLinear.css';
 
 const ConjugateGradientMethod = () => {
   const [numRows, setNumRows] = useState(2);
-  const [matrix, setMatrix] = useState(
-    Array.from({ length: numRows }, () =>
-      Array.from({ length: numRows }, () => "")
-    )
-  );
+  const [matrix, setMatrix] = useState([]);
   const [result, setResult] = useState([]);
   const maxMatrixSize = 10;
 
   const handleNumRowsChange = (event) => {
     const newNumRows = parseInt(event.target.value);
-
     if (newNumRows >= 1 && newNumRows <= maxMatrixSize) {
       setNumRows(newNumRows);
-      setMatrix(
-        Array.from({ length: newNumRows }, () =>
-          Array.from({ length: newNumRows }, () => "")
-        )
-      );
+      setMatrix(Array.from({ length: newNumRows }, () => Array.from({ length: newNumRows + 1 }, () => "")));
     } else {
       alert(`Please enter a number between 1 and ${maxMatrixSize}`);
     }
+  };
+
+  const handleGenerateMatrix = () => {
+    const newMatrix = Array.from({ length: numRows }, () => {
+      return Array.from({ length: numRows + 1 }, () => ""); 
+    });
+    setMatrix(newMatrix);
   };
 
   const handleInputChange = (event, row, col) => {
@@ -33,10 +31,8 @@ const ConjugateGradientMethod = () => {
   };
 
   const handleCalculate = () => {
-    const A = matrix.map((row) =>
-      row.map((value) => parseFloat(value))
-    );
-
+    const A = matrix.map((row) => row.map((value) => parseFloat(value)));
+    
     const n = A.length;
     const maxIterations = 100;
     const errorTolerance = 1e-6;
@@ -92,11 +88,9 @@ const ConjugateGradientMethod = () => {
   };
 
   const renderTable = () => {
-    const rows = [];
-    for (let i = 0; i < numRows; i++) {
-      const rowInputs = [];
-      for (let j = 0; j <= numRows; j++) {
-        rowInputs.push(
+    return matrix.map((row, i) => (
+      <div key={i} className="matrix-row">
+        {row.map((value, j) => (
           <input
             key={j}
             type="text"
@@ -104,57 +98,62 @@ const ConjugateGradientMethod = () => {
             onChange={(event) => handleInputChange(event, i, j)}
             className="matrix-input"
           />
-        );
-      }
-      rows.push(
-        <div key={i} className="matrix-row">
-          {rowInputs}
-        </div>
-      );
-    }
-    return rows;
+        ))}
+      </div>
+    ));
   };
 
   return (
-    <div className="conjugate-gradient-method">
-      <h2>Conjugate Gradient Method</h2>
-      <input
-        type="number"
-        min="2"
-        value={numRows}
-        onChange={handleNumRowsChange}
-        className="num-rows-input"
-      />
-      <div className="matrix-container">
-        {renderTable()}
-        <button className="calculate-button" onClick={handleCalculate}>
-          Calculate
+    <div className="calculator-container">
+      <div className="form-container">
+        <div className="form-title">
+          <h1>Conjugate Gradient Method</h1>
+        </div>
+        <input
+          type="number"
+          min="2"
+          value={numRows}
+          onChange={handleNumRowsChange}
+          className="num-rows-input"
+        />
+        <button className="calculate" onClick={handleGenerateMatrix}>
+          Generate Matrix
         </button>
       </div>
-      <div className="result-container">
-        <table>
-          <thead>
-            <tr>
-              <th>Iteration</th>
-              {Array.from({ length: numRows }, (_, index) => (
-                <th key={index}>{`x${index + 1}`}</th>
-              ))}
-              <th>Error</th>
-            </tr>
-          </thead>
-          <tbody>
-            {result.map((item, index) => (
-              <tr key={index}>
-                <td>{item.iteration + 1}</td>
-                {item.x.map((x, i) => (
-                  <td key={i}>{x.toFixed(7)}</td>
+      {matrix.length > 0 && (
+        <div className="matrix-container">
+          {renderTable()}
+          <button className="calculate" onClick={handleCalculate}>
+            Calculate
+          </button>
+        </div>
+      )}
+      {result.length > 0 && (
+        <div className="result-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Iteration</th>
+                {Array.from({ length: numRows }, (_, index) => (
+                  <th key={index}>{`x${index + 1}`}</th>
                 ))}
-                <td>{item.error.toFixed(7)}</td>
+                <th>Error</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {result.map((item, index) => (
+                <tr key={index}>
+                  <td>{item.iteration + 1}</td>
+                  {item.x.map((x, i) => (
+                    <td key={i}>{x.toFixed(7)}</td>
+                  ))}
+                  <td>{item.error.toFixed(7)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 };

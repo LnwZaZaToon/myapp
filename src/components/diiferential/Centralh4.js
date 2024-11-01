@@ -75,26 +75,34 @@ function Centralh4() {
 
     return (
         <div>
-            <form onSubmit={Calculate}>
-                <div className='FormContainer'>
-                    <select onChange={handleDegree} value={Degree}>
-                        <option value={1}>1 derivative</option>
-                        <option value={2}>2 derivatives</option>
-                        <option value={3}>3 derivatives</option>
-                        <option value={4}>4 derivatives</option>
-                    </select>
-                    <input type='text' step="any" value={Func} onChange={handleFunc} placeholder='input function' />
-                    <input type='number' step="any" value={X} onChange={HandleX} placeholder='input x' />
-                    <input type='number' step="any" value={H} onChange={HandleH} placeholder='input h' />
-                </div>
-                <div className='FormButton'>
-                    <button type='submit'>Calculate</button>
-                </div>
-            </form>
-            <div className='Answer'>
-                <h2>Answer of Central: {result.toFixed(6)}</h2>
-                <h2>Answer of Exact value: {resultNormal.toFixed(6)}</h2>
-                <h2>Error: {Err.toFixed(6)}%</h2>
+            <div className="calculator-container">
+                <form onSubmit={Calculate}>
+                    <div className="form-container">
+                        <div className="form-title" >
+                            <h1 >Bisection Method Calculator</h1>
+                        </div>
+                        <div className='FormContainer'>
+                            <select onChange={handleDegree} value={Degree}>
+                                <option value={1}>1 derivative</option>
+                                <option value={2}>2 derivatives</option>
+                                <option value={3}>3 derivatives</option>
+                                <option value={4}>4 derivatives</option>
+                            </select>
+                            <input type='text' step="any" value={Func} onChange={handleFunc} placeholder='input function' />
+                            <input type='number' step="any" value={X} onChange={HandleX} placeholder='input x' />
+                            <input type='number' step="any" value={H} onChange={HandleH} placeholder='input h' />
+                        </div>
+                        <div className='FormButton'>
+                            <button type='submit'>Calculate</button>
+                        </div>
+                        <div className='Answer'>
+                            <h2>Answer of Central: {result.toFixed(6)}</h2>
+                            <h2>Answer of Exact value: {resultNormal.toFixed(6)}</h2>
+                            <h2>Error: {Err.toFixed(6)}%</h2>
+                        </div>
+                    </div>
+
+                </form>
             </div>
         </div>
     );

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import './styleInterpolation.css';
 
 function Lagrange() {
   const [Xtarget, setXtarget] = useState(0);
@@ -28,8 +29,8 @@ function Lagrange() {
   const ResetNew = () => {
 
     setResult(0);
-    setPointCount(1); // Reset to 1 point
-    setPoints([{ x: "", y: "" }]); // Reset points
+    setPointCount(2); // Reset to 1 point
+    setPoints([{ x: "", y: "" },{ x: "", y: "" }]); // Reset points
   };
 
   // Update number of points when user changes the selection
@@ -47,7 +48,7 @@ function Lagrange() {
     setPoints(updatedPoints);
   };
 
-  const handleXtarget = (e) =>{
+  const handleXtarget = (e) => {
     setXtarget(e.target.value)
   }
 
@@ -56,9 +57,11 @@ function Lagrange() {
   }
 
   return (
-    <div>
-      <h1 className="form-title">Lagrange Interpolation</h1>
-      <form>
+    <div className="calculator-container">
+      <div className="form-container">
+        <div className="form-title" >
+          <h1 >Lagrange Method Calculator</h1>
+        </div>
         <div className="inputPoint">
           <select value={pointCount} onChange={handlePointCountChange}>
             <option value={2}>2 Point</option>
@@ -66,43 +69,44 @@ function Lagrange() {
             <option value={5}>5 Points</option>
           </select>
         </div>
-      </form>
 
-      <form onSubmit={Calculate}>
-        <div className="formcontainer">
-          {/* Render input fields dynamically based on the selected number of points */}
-          <div>
-            {points.map((point, index) => (
-              <div key={index} className="pointInputs" style={{ display: 'flex' }}>
-                <input
-                  type="number"
-                  value={point.x}
-                  step="any"
-                  placeholder={`x${index + 1}`}
-                  onChange={(e) => handlePointChange(index, "x", e.target.value)}
-                />
-                <input
-                  type="number"
-                  value={point.y}
-                  step="any"
-                  placeholder={`y${index + 1}`}
-                  onChange={(e) => handlePointChange(index, "y", e.target.value)}
-                />
-              </div>
-            ))}
-          </div>
-          <input type="number" value={Xtarget} step="any" placeholder="input x" onChange={handleXtarget} />
+        <form onSubmit={Calculate}>
+          <div className="formcontainer">
+            {/* Render input fields dynamically based on the selected number of points */}
+            <div>
+              {points.map((point, index) => (
+                <div key={index} className="pointInputs" style={{ display: 'flex' }}>
+                  <input
+                    type="number"
+                    value={point.x}
+                    step="any"
+                    placeholder={`x${index + 1}`}
+                    onChange={(e) => handlePointChange(index, "x", e.target.value)}
+                  />
+                  <input
+                    type="number"
+                    value={point.y}
+                    step="any"
+                    placeholder={`y${index + 1}`}
+                    onChange={(e) => handlePointChange(index, "y", e.target.value)}
+                  />
+                </div>
+              ))}
+            </div>
+            <input type="number" value={Xtarget} step="any" placeholder="input x" onChange={handleXtarget} />
 
-          <div className="ButtonCon">
-            <button type="submit" className="calculate">Calculate</button>
-            <button type="button" className="calculate" onClick={ResetNew}>Reset</button>
+            <div className="ButtonCon">
+              <button type="submit" className="calculate">Calculate</button>
+              <button type="button" className="calculate" onClick={ResetNew}>Reset</button>
+            </div>
           </div>
-        </div>
-        <button type="button" className="calculate" onClick={logData}>log</button>
-        <h1>Answer: {result.toFixed(6)}</h1>
-      </form>
+          <h1>Answer: {result.toFixed(6)}</h1>
+        </form>
+      </div>
+
     </div>
+
   );
 }
 
-export default Lagrange
+export default Lagrange;

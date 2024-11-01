@@ -17,7 +17,7 @@ function CompositeTrapzoidal() {
         let n = parseInt(N);
         let a = parseFloat(A);
         let b = parseFloat(B);
-        let h = (b-a) / n;
+        let h = (b - a) / n;
         let I = (h / 2) * (F(a) + F(b) + (2 * Sumodd(n, a, b)));
 
         let real = RealValue(a, b);
@@ -29,8 +29,8 @@ function CompositeTrapzoidal() {
 
     const Sumodd = (n, a, b) => {
         let sum = 0;
-        for (let i=1; i<=n-1; i++) {
-            sum += F(a+i*(b-a)/n);
+        for (let i = 1; i <= n - 1; i++) {
+            sum += F(a + i * (b - a) / n);
         }
         return sum;
     }
@@ -59,24 +59,32 @@ function CompositeTrapzoidal() {
     const handleN = (e) => {
         setN(e.target.value);
     }
-    
+
     return (
         <div>
-            <form onSubmit={Calculate}>
-                <div className='FormContainer'>
-                    <input type='text' step="any" value={Func} onChange={handleFunc} placeholder='Input function' />
-                    <input type='number' step="any" value={A} onChange={HandleA} placeholder='Input a' />
-                    <input type='number' step="any" value={B} onChange={HandleB} placeholder='Input b' />
-                    <input type='number' step="any" value={N} onChange={handleN} placeholder='Input n' />
-                </div>
-                <div className='FormButton'>
-                    <button type='submit'>Calculate</button>
-                </div>
-            </form>
-            <div className='Answer'>
-                <h2>Answer of Trapezoidal: {resultTrap.toFixed(2)}</h2>
-                <h2>Answer of Exact value: {resultNormal.toFixed(2)}</h2>
-                <h2>Error: {Err.toFixed(2)}%</h2>
+            <div className="calculator-container">
+                <form onSubmit={Calculate}>
+                    <div className="form-container">
+                        <div className="form-title" >
+                            <h1 >Bisection Method Calculator</h1>
+                        </div>
+                        <div className='FormContainer'>
+                            <input type='text' step="any" value={Func} onChange={handleFunc} placeholder='Input function' />
+                            <input type='number' step="any" value={A} onChange={HandleA} placeholder='Input a' />
+                            <input type='number' step="any" value={B} onChange={HandleB} placeholder='Input b' />
+                            <input type='number' step="any" value={N} onChange={handleN} placeholder='Input n' />
+                        </div>
+                        <div className='FormButton'>
+                            <button type='submit'>Calculate</button>
+                        </div>
+                        <div className='Answer'>
+                            <h2>Answer of Trapezoidal: {resultTrap.toFixed(2)}</h2>
+                            <h2>Answer of Exact value: {resultNormal.toFixed(2)}</h2>
+                            <h2>Error: {Err.toFixed(2)}%</h2>
+                        </div>
+                    </div>
+                </form>
+
             </div>
         </div>
     );
