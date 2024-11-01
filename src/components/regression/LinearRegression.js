@@ -126,35 +126,7 @@ function LinearRegression() {
 
       <div className="results-container">
         <div className="table-and-chart-graphical">
-          {calculated && (
-            <div className="chart-container-graphical">
-              <Plot
-                data={[
-                  {
-                    x: plotData.map(p => p.x),
-                    y: plotData.map(p => p.y),
-                    type: "scatter",
-                    mode: "lines",
-                    line: { color: "blue" },
-                    name: "Regression Line",
-                  },
-                  {
-                    x: points.map(p => parseFloat(p.x)),
-                    y: points.map(p => parseFloat(p.y)),
-                    type: "scatter",
-                    mode: "markers",
-                    marker: { color: "red" },
-                    name: "Data Points",
-                  },
-                ]}
-                layout={{
-                  title: "Simple Regression Line",
-                  xaxis: { title: "X1" },
-                  yaxis: { title: "Y" },
-                }}
-              />
-            </div>
-          )}
+   
         </div>
       </div>
     </div>

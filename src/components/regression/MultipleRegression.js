@@ -128,33 +128,6 @@ function MultipleRegression() {
         <h1>Predicted Value: {result.toFixed(6)}</h1>
         <h2>Regression Equation: {regressionEquation}</h2>
       </form>
-
-      {/* Plotly Graph */}
-      <Plot
-        data={[
-          {
-            x: plotData.map(p => p.x),
-            y: plotData.map(p => p.y),
-            type: "scatter",
-            mode: "lines+markers",
-            marker: { color: "blue" },
-            name: "Regression Line",
-          },
-          {
-            x: points.map(p => parseFloat(p.x1)),
-            y: points.map(p => parseFloat(p.y)),
-            type: "scatter",
-            mode: "markers",
-            marker: { color: "red" },
-            name: "Data Points",
-          },
-        ]}
-        layout={{
-          title: "Simple Regression Line",
-          xaxis: { title: "X1" },
-          yaxis: { title: "Y" },
-        }}
-      />
     </div>
   );
 }

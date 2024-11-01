@@ -133,33 +133,7 @@ function PolynomialRegression() {
       </div>
 
       <div className="results-container">
-        {calculated && (
-          <Plot
-            data={[
-              {
-                x: plotData.map(p => p.x),
-                y: plotData.map(p => p.y),
-                type: "scatter",
-                mode: "lines",
-                line: { color: "blue" },
-                name: "Regression Line",
-              },
-              {
-                x: points.map(p => parseFloat(p.x)),
-                y: points.map(p => parseFloat(p.y)),
-                type: "scatter",
-                mode: "markers",
-                marker: { color: "red" },
-                name: "Data Points",
-              },
-            ]}
-            layout={{
-              title: "Polynomial Regression Line",
-              xaxis: { title: "X1" },
-              yaxis: { title: "Y" },
-            }}
-          />
-        )}
+        
       </div>
     </div>
   );
