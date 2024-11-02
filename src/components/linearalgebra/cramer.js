@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { det } from "mathjs";
 import './styleLinear.css';
 
-const CramerRule = () => {
+function CramerRule() {
   const [numRows, setNumRows] = useState(2);
   const [matrix, setMatrix] = useState([]);
   const [result, setResult] = useState([]);
@@ -65,7 +65,7 @@ const CramerRule = () => {
           Array.from({ length: newNumRows + 1 }, () => "")
         )
       );
-      setShowMatrix(false); // Hide matrix until generated
+      setShowMatrix(false); 
     } else {
       alert(`Please enter a number between 2 and ${maxMatrixSize}`);
     }
@@ -101,7 +101,7 @@ const CramerRule = () => {
     const detA = det(matrixA);
 
     if (detA === 0) {
-      alert("The determinant is zero. The system may have no solution or infinitely many solutions.");
+      alert("The determinant is zero");
       return;
     }
 

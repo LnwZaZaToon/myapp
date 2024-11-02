@@ -47,7 +47,18 @@ app.listen(port,()=>{
     console.log("Connected Success")
 }).catch((error) => console.log(error))
 
-
+// Swagger Documentation for GET /api/equations
+/**
+ * @swagger
+ * /api/equations:
+ *   get:
+ *     summary: Get equation
+ *     responses:
+ *       200:
+ *         description: Successful
+ *       500:
+ *         description: Error
+ */
 app.get('/api/equations', async (req, res) => {
   try {
       const dataFound = await EqRoot1.find();
@@ -57,6 +68,20 @@ app.get('/api/equations', async (req, res) => {
       res.status(500).json({ message: err.message });
   }
 });
+
+/**
+ * @swagger
+ * /api/Add-equations:
+ *   post:
+ *     summary: add equation
+ *     responses:
+ * 
+ *       201:
+ *         description: Successful
+ *       500:
+ *         description: Error
+ */
+
 
 app.post('/api/Add-equations', async (req, res) => {
   const { methodType, func, xL, xR,table,epsilon,answer} = req.body;

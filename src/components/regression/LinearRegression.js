@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { lusolve } from "mathjs";
-
+import { Line } from "react-chartjs-2";
 function LinearRegression() {
   const [X1target, setX1target] = useState(0);
   const [result, setResult] = useState(0);
@@ -45,13 +45,23 @@ function LinearRegression() {
     const predictedY = intercept + slope * X1target;
     setResult(predictedY);
 
+    // Find min and max x values from points
+    const minX = Math.min(...points.map((p) => parseFloat(p.x) || 0));
+    const maxX = Math.max(...points.map((p) => parseFloat(p.x) || 0));
+
+    // Extend the range slightly
+    const extendedMinX = minX - (maxX - minX) * 0.1;
+    const extendedMaxX = maxX + (maxX - minX) * 0.1;
+
+    // Generate regression line over the extended range
     const regressionLine = Array.from({ length: 100 }, (_, i) => {
-      const x = Math.min(...points.map((p) => parseFloat(p.x) || 0)) + i * 0.1;
+      const x = extendedMinX + i * ((extendedMaxX - extendedMinX) / 99);
       return { x, y: intercept + slope * x };
     });
     setPlotData(regressionLine);
-    setCalculated(true)
+    setCalculated(true);
   };
+
 
   const ResetNew = () => {
     setResult(0);
@@ -59,6 +69,7 @@ function LinearRegression() {
     setPointCount(2);
     setPoints([{ x: "", y: "" }, { x: "", y: "" }]);
     setPlotData([]);
+    setCalculated(false)
   };
 
   const handlePointCountChange = (e) => {
@@ -77,6 +88,55 @@ function LinearRegression() {
   const handleX1target = (e) => {
     setX1target(parseFloat(e.target.value) || 0);
   };
+
+  const chartData = {
+    datasets: [
+      {
+        label: 'Regression Line',
+        data: plotData.map((point) => ({ x: point.x, y: point.y })),
+        borderColor: 'rgba(75, 192, 192, 1)',
+        borderWidth: 2,
+        fill: false,
+        showLine: true,
+      },
+      {
+        label: 'Data Points',
+        data: points.map((point) => ({ x: parseFloat(point.x) || 0, y: parseFloat(point.y) || 0 })),
+        backgroundColor: 'rgba(255, 99, 132, 1)',
+        borderWidth: 1,
+        pointRadius: 4,
+      }
+    ]
+  };
+
+  const options = {
+    scales: {
+      x: {
+        type: 'linear',
+        title: {
+          display: true,
+          text: 'X1'
+        }
+      },
+      y: {
+        title: {
+          display: true,
+          text: 'Y'
+        }
+      }
+    },
+    plugins: {
+      title: {
+        display: true,
+        text: 'Polynomial Regression Plot'
+      },
+      legend: {
+        display: true,
+        position: 'top'
+      }
+    }
+  };
+
 
   return (
     <div className="calculator-container">
@@ -119,15 +179,17 @@ function LinearRegression() {
               <button type="button" className="calculate" onClick={ResetNew}>Reset</button>
             </div>
           </div>
-          <h1>Predicted Value: {result.toFixed(6)}</h1>
-          <h2>Regression Equation: {regressionEquation}</h2>
+          <div className="answer">
+            <h1>Predicted Value: {result.toFixed(6)}</h1>
+            <h2>Regression Equation: {regressionEquation}</h2>
+          </div>
         </form>
       </div>
 
-      <div className="results-container">
-        <div className="table-and-chart-graphical">
-   
-        </div>
+      <div className="table" >
+        {calculated && (
+          <Line data={chartData} options={options} />
+        )}
       </div>
     </div>
   );
