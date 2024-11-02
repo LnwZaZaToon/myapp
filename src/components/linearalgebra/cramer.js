@@ -60,12 +60,6 @@ function CramerRule() {
 
     if (newNumRows >= 2 && newNumRows <= maxMatrixSize) {
       setNumRows(newNumRows);
-      setMatrix(
-        Array.from({ length: newNumRows }, () =>
-          Array.from({ length: newNumRows + 1 }, () => "")
-        )
-      );
-      setShowMatrix(false); 
     } else {
       alert(`Please enter a number between 2 and ${maxMatrixSize}`);
     }

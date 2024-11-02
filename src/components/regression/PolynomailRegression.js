@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { lusolve } from "mathjs";
 import { Line } from "react-chartjs-2";
 
@@ -12,17 +12,67 @@ function PolynomialRegression() {
   const [plotData, setPlotData] = useState([]);
   const [calculated, setCalculated] = useState(false);
 
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch('http://localhost:4000/api/Regression');
+        const result = await res.json();
+
+        //เช็คว่า type เหมือนกันไหม
+        const filteredResult = result.filter(item => item.methodType === "Polynomail");
+        setData(filteredResult);
+
+        console.log(filteredResult);
+      } catch (error) {
+        console.log("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+
+
+  const PostDataBase = async (e) => {
+    e.preventDefault();
+    const response = await fetch('http://localhost:4000/api/Add-Regression', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        methodType: "Polynomail",
+        result,
+        regressionEquation,
+        points,
+        plotData,
+        X1target,
+      }),
+    });
+
+    const dbResult = await response.json();
+    console.log('Response Status:', response.status);
+    console.log('Result from API:', dbResult);
+
+    if (!response.ok) {
+      console.error('Failed to save equation:', dbResult.message);
+      alert("Fail")
+      return;
+    }
+    alert("Success")
+  }
+
   const calculate = (e) => {
     e.preventDefault();
     if (points.length < degree + 1) {
       alert("Degree cannot be higher than points - 1");
       return;
     }
-  
+
     // Matrix creation and solving logic remains the same
     const matrix1 = Array(degree + 1).fill(0).map(() => Array(degree + 1).fill(0));
     const matrix2 = Array(degree + 1).fill(0);
-  
+
     points.forEach((point) => {
       const x1 = parseFloat(point.x) || 0;
       const y = parseFloat(point.y) || 0;
@@ -33,29 +83,29 @@ function PolynomialRegression() {
         matrix2[i] += y * x1 ** i;
       }
     });
-  
+
     const coefficients = lusolve(matrix1, matrix2).map((row) => row[0]);
     setRegressionEquation(
       "Y = " +
-        coefficients
-          .map((coeff, i) => `${coeff.toFixed(4)}*X1^${i}`)
-          .join(" + ")
+      coefficients
+        .map((coeff, i) => `${coeff.toFixed(4)}*X1^${i}`)
+        .join(" + ")
     );
-  
+
     const predictedY = coefficients.reduce(
       (acc, coeff, i) => acc + coeff * X1target ** i,
       0
     );
     setResult(predictedY);
-  
+
     // Find min and max x values from points
     const minX = Math.min(...points.map((p) => parseFloat(p.x) || 0));
     const maxX = Math.max(...points.map((p) => parseFloat(p.x) || 0));
-    
+
     // Extend the range slightly
     const extendedMinX = minX - (maxX - minX) * 0.1;
     const extendedMaxX = maxX + (maxX - minX) * 0.1;
-  
+
     // Generate regression line over the extended range
     const regressionLine = Array.from({ length: 100 }, (_, i) => {
       const x = extendedMinX + i * ((extendedMaxX - extendedMinX) / 99);
@@ -65,7 +115,7 @@ function PolynomialRegression() {
     setPlotData(regressionLine);
     setCalculated(true);
   };
-  
+
   const reset = () => {
     setResult(0);
     setRegressionEquation("");
@@ -145,6 +195,23 @@ function PolynomialRegression() {
       }
     }
   };
+  const handleOptionChangeFunc = async (e) => {
+    const selectedEquation = e.target.value;
+    const selected = data.find(item => item.regressionEquation === selectedEquation);
+
+    if (selected) {
+      setX1target(selected.X1target);
+      setPoints(selected.points);
+      setResult(selected.result);
+      setPointCount(selected.points.length);
+      setRegressionEquation(selected.regressionEquation);
+      setPlotData(selected.plotData)
+      setCalculated(true)
+    } else {
+      console.error("Selected equation not found in data.");
+    }
+  };
+
 
   return (
     <div className="calculator-container">
@@ -152,8 +219,8 @@ function PolynomialRegression() {
         <h1>Polynomial Regression</h1>
         <form>
           <div className="input-controls">
-            <input type="number" placeholder="Number of points" onChange={handlePointCountChange} />
-            <input type="number" placeholder="m"  onChange={handleDegreeChange} />
+            <input type="number"  placeholder="Number of points" onChange={handlePointCountChange} />
+            <input type="number" placeholder="m" onChange={handleDegreeChange} />
           </div>
         </form>
 
@@ -177,16 +244,24 @@ function PolynomialRegression() {
                 />
               </div>
             ))}
-            <input type="number"  step="any" placeholder="Input X1" onChange={handleX1target} />
-
+            <input type="number" step="any" placeholder="Input X1" onChange={handleX1target} />
+            <select onChange={handleOptionChangeFunc} className="option-form">
+              <option value="">Equation example</option>
+              {data.map((item) => (
+                <option key={item.id} value={item.regressionEquation}>
+                  {`Answer: ${item.regressionEquation}`}
+                </option>
+              ))}
+            </select>
             <div className="button-container">
               <button type="submit" className="calculate">Calculate</button>
               <button type="button" className="calculate" onClick={reset}>Reset</button>
+              <button type="button" className="calculate" onClick={PostDataBase}>Add Database</button>
             </div>
           </div>
           <div className="answer">
-          <h1>Predicted Value: {result.toFixed(6)}</h1>
-          <h2>Regression Equation: {regressionEquation}</h2>
+            <h1>Predicted Value: {result.toFixed(6)}</h1>
+            <h2>Regression Equation: {regressionEquation}</h2>
           </div>
         </form>
       </div>

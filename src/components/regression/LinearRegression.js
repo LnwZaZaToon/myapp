@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { lusolve } from "mathjs";
 import { Line } from "react-chartjs-2";
 function LinearRegression() {
@@ -9,6 +9,56 @@ function LinearRegression() {
   const [points, setPoints] = useState([{ x: "", y: "" }, { x: "", y: "" }]);
   const [plotData, setPlotData] = useState([]);
   const [calculated, setCalculated] = useState(false)
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch('http://localhost:4000/api/Regression');
+        const result = await res.json();
+
+        //เช็คว่า type เหมือนกันไหม
+        const filteredResult = result.filter(item => item.methodType === "LinearRegression");
+        setData(filteredResult);
+
+        console.log(filteredResult);
+      } catch (error) {
+        console.log("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+
+
+  const PostDataBase = async (e) => {
+    e.preventDefault();
+    const response = await fetch('http://localhost:4000/api/Add-Regression', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        methodType: "LinearRegression",
+        result,
+        regressionEquation,
+        points,
+        plotData,
+        X1target,
+      }),
+    });
+
+    const dbResult = await response.json();
+    console.log('Response Status:', response.status);
+    console.log('Result from API:', dbResult);
+
+    if (!response.ok) {
+      console.error('Failed to save equation:', dbResult.message);
+      alert("Fail")
+      return;
+    }
+    alert("Success")
+  }
+
 
   const Calculate = (e) => {
     e.preventDefault();
@@ -137,6 +187,23 @@ function LinearRegression() {
     }
   };
 
+  const handleOptionChangeFunc = async (e) => {
+    const selectedEquation = e.target.value;
+    const selected = data.find(item => item.regressionEquation === selectedEquation);
+
+    if (selected) {
+        setX1target(selected.X1target); 
+        setPoints(selected.points); 
+        setResult(selected.result); 
+        setPointCount(selected.points.length); 
+        setRegressionEquation(selected.regressionEquation);
+        setPlotData(selected.plotData)
+        setCalculated(true)
+    } else {
+        console.error("Selected equation not found in data.");
+    }
+};
+
 
   return (
     <div className="calculator-container">
@@ -146,7 +213,7 @@ function LinearRegression() {
         </div>
         <form>
           <div className="inputPoint">
-            <input type="number" step="any" placeholder="Input number of points" onChange={handlePointCountChange} />
+            <input type="number" step="any" value={pointCount} placeholder="Input number of points" onChange={handlePointCountChange} />
           </div>
         </form>
 
@@ -172,11 +239,19 @@ function LinearRegression() {
                 </div>
               ))}
             </div>
-            <input type="number" value={X1target} step="any" placeholder="Input X1" onChange={handleX1target} />
-
+            <input type="number" step="any" value={X1target} placeholder="Input X1" onChange={handleX1target} />
+            <select onChange={handleOptionChangeFunc} className="option-form">
+              <option value="">Equation example</option>
+              {data.map((item) => (
+                <option key={item.id} value={item.regressionEquation}>
+                  {`Answer: ${item.regressionEquation}`}
+                </option>
+              ))}
+            </select>
             <div className="button-container">
               <button type="submit" className="calculate">Calculate</button>
               <button type="button" className="calculate" onClick={ResetNew}>Reset</button>
+              <button type="button" className="calculate" onClick={PostDataBase}>Add Database</button>
             </div>
           </div>
           <div className="answer">

@@ -1,11 +1,59 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function LinearSpline() {
   const [Xtarget, setXtarget] = useState(0);
   const [result, setResult] = useState(0);
   const [pointCount, setPointCount] = useState(2);
   const [points, setPoints] = useState([{ x: "", y: "" }, { x: "", y: "" }]);
+  const [data, setData] = useState([]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch('http://localhost:4000/api/Interpolation');
+        const result = await res.json();
+
+        //เช็คว่า type เหมือนกันไหม
+        const filteredResult = result.filter(item => item.methodType === "LinearSpline");
+        setData(filteredResult);
+
+        console.log(filteredResult);
+      } catch (error) {
+        console.log("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+
+
+  const PostDataBase = async (e) => {
+    e.preventDefault();
+    console.log(Xtarget)
+    const response = await fetch('http://localhost:4000/api/Add-Interpolation', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        methodType: "LinearSpline",
+        points,
+        xTarget: Xtarget,
+        answer: result,
+        n: pointCount,
+      }),
+    });
+
+    const dbResult = await response.json();
+    console.log('Response Status:', response.status);
+    console.log('Result from API:', dbResult);
+
+    if (!response.ok) {
+      console.error('Failed to save equation:', dbResult.message);
+      alert("Fail")
+      return;
+    }
+    alert("Success")
+  }
   const Calculate = (e) => {
     e.preventDefault();
     let xFind = parseFloat(Xtarget);
@@ -39,7 +87,7 @@ function LinearSpline() {
   };
 
   const handlePointCountChange = (e) => {
-    const count = parseInt(e.target.value)|| 2;
+    const count = parseInt(e.target.value) || 2;
     setPointCount(count);
     const newPoints = Array(count).fill({ x: "", y: "" });
     setPoints(newPoints);
@@ -57,6 +105,19 @@ function LinearSpline() {
 
   const logData = () => {
     console.log(points);
+  };
+  const handleOptionChangeFunc = async (e) => {
+    const selectedEquation = e.target.value;
+    const selected = data.find(item => item.answer === parseFloat(selectedEquation));
+
+    if (selected) {
+      setXtarget(selected.xTarget);
+      setPoints(selected.points);
+      setResult(selected.answer);
+      setPointCount(selected.n);
+    } else {
+      console.error("Selected equation not found in data.");
+    }
   };
 
   return (
@@ -100,10 +161,18 @@ function LinearSpline() {
               ))}
             </div>
             <input type="number" value={Xtarget} step="any" placeholder="input x" onChange={handleXtarget} />
-
+            <select onChange={handleOptionChangeFunc} className="option-form">
+              <option value="">Equation example</option>
+              {data.map((item) => (
+                <option key={item.id} value={item.answer}>
+                  {`Answer: ${item.answer}`}
+                </option>
+              ))}
+            </select>
             <div className="button-container">
               <button type="submit" className="calculate">Calculate</button>
               <button type="button" className="calculate" onClick={ResetNew}>Reset</button>
+              <button type="button" className="calculate" onClick={PostDataBase}>Add Database</button>
             </div>
           </div>
           <h1>Answer: {isNaN(result) ? "Out of Bounds" : result.toFixed(6)}</h1>

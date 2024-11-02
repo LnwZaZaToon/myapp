@@ -6,10 +6,13 @@ const app = express();
 dotenv.config({ path: './server/.env' });
 const swaggerJSDoc = require('swagger-jsdoc')
 const swaggerUI = require('swagger-ui-express')
+const swaggerDocument = require('./swagger.json');
 const EqRoot1 = require('./models/db');
 const IntegralApi = require('./models/dbintegral');
 const DiffApi = require('./models/dbdiff');
 const GaussApi = require('./models/dbgauss');
+const InterpolationApi = require('./models/dbinter');
+const RegressionApi = require('./models/dbregress');
 
 const options = {
   definition: {
@@ -21,70 +24,45 @@ const options = {
     },
     servers: [
       {
-        url: 'http://localhost:4000', 
+        url: 'http://localhost:4000',
       },
     ],
   },
-  apis: ['./server/*.js'], 
+  apis: ['./server/*.js'],
 };
 
 const swaggerSpec = swaggerJSDoc(options);
-app.use("/api-docs",swaggerUI.serve,swaggerUI.setup(swaggerSpec))
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument))
 
 
-const port = process.env.PORT || 7000
-const MONGO_URL = process.env.MONGO_URL
+const port = 4000 || 7000
+const MONGO_URL = "mongodb+srv://kasemsitzazax:1234@cluster0.nrmsn.mongodb.net/numerical"
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-app.listen(port,()=>{
-    console.log(`server running at port ${port}`)
-  })
+app.listen(port, () => {
+  console.log(`server running at port ${port}`)
+})
 
- mongoose.connect(MONGO_URL).then(()=>{
-    console.log("Connected Success")
+mongoose.connect(MONGO_URL).then(() => {
+  console.log("Connected Success")
 }).catch((error) => console.log(error))
 
-// Swagger Documentation for GET /api/equations
-/**
- * @swagger
- * /api/equations:
- *   get:
- *     summary: Get equation
- *     responses:
- *       200:
- *         description: Successful
- *       500:
- *         description: Error
- */
+
 app.get('/api/equations', async (req, res) => {
   try {
-      const dataFound = await EqRoot1.find();
-      console.log(dataFound); 
-      res.send(dataFound);
+    const dataFound = await EqRoot1.find();
+    console.log(dataFound);
+    res.send(dataFound);
   } catch (err) {
-      res.status(500).json({ message: err.message });
+    res.status(500).json({ message: err.message });
   }
 });
 
-/**
- * @swagger
- * /api/Add-equations:
- *   post:
- *     summary: add equation
- *     responses:
- * 
- *       201:
- *         description: Successful
- *       500:
- *         description: Error
- */
-
-
 app.post('/api/Add-equations', async (req, res) => {
-  const { methodType, func, xL, xR,table,epsilon,answer} = req.body;
+  const { methodType, func, xL, xR, table, epsilon, answer } = req.body;
   try {
     const newEquation = new EqRoot1({
       methodType,
@@ -93,7 +71,7 @@ app.post('/api/Add-equations', async (req, res) => {
       xr: xR,
       table,
       epsilon,
-      answer     
+      answer
     });
     await newEquation.save();
     res.status(201).json(newEquation);
@@ -107,35 +85,35 @@ app.post('/api/Add-equations', async (req, res) => {
 
 app.get('/api/Integral', async (req, res) => {
   try {
-      const dataFound = await IntegralApi.find();
-      console.log(dataFound); 
-      res.send(dataFound);
+    const dataFound = await IntegralApi.find();
+    console.log(dataFound);
+    res.send(dataFound);
   } catch (err) {
-      res.status(500).json({ message: err.message });
+    res.status(500).json({ message: err.message });
   }
 });
 
 
 
 app.post('/api/Add-Integral', async (req, res) => {
-  console.log('Request Body:', req.body); 
-  const { methodType, equation, a, b, n, answer1, answer2 ,err} = req.body;
+  console.log('Request Body:', req.body);
+  const { methodType, equation, a, b, n, answer1, answer2, err } = req.body;
   try {
-      const newEquation = new IntegralApi({
-          methodType,
-          equation,
-          a,
-          b,
-          n,
-          answer1,
-          answer2,
-          err          
-      });
-      await newEquation.save();
-      res.status(201).json(newEquation);
+    const newEquation = new IntegralApi({
+      methodType,
+      equation,
+      a,
+      b,
+      n,
+      answer1,
+      answer2,
+      err
+    });
+    await newEquation.save();
+    res.status(201).json(newEquation);
   } catch (error) {
-      console.error('Error saving equation:', error); 
-      res.status(500).json({ message: 'Failed to save equation', error: error.message });
+    console.error('Error saving equation:', error);
+    res.status(500).json({ message: 'Failed to save equation', error: error.message });
   }
 });
 
@@ -146,35 +124,35 @@ app.post('/api/Add-Integral', async (req, res) => {
 
 app.get('/api/Diff', async (req, res) => {
   try {
-      const dataFound = await DiffApi.find();
-      console.log(dataFound); 
-      res.send(dataFound);
+    const dataFound = await DiffApi.find();
+    console.log(dataFound);
+    res.send(dataFound);
   } catch (err) {
-      res.status(500).json({ message: err.message });
+    res.status(500).json({ message: err.message });
   }
 });
 
 
 
 app.post('/api/Add-Diff', async (req, res) => {
-  console.log('Request Body:', req.body); 
-  const { methodType, equation, x, h, degree, answer1, answer2 ,err} = req.body;
+  console.log('Request Body:', req.body);
+  const { methodType, equation, x, h, degree, answer1, answer2, err } = req.body;
   try {
-      const newEquation = new DiffApi({
-          methodType,
-          equation,
-          x,
-          h,
-          degree,
-          answer1,
-          answer2,
-          err          
-      });
-      await newEquation.save();
-      res.status(201).json(newEquation);
+    const newEquation = new DiffApi({
+      methodType,
+      equation,
+      x,
+      h,
+      degree,
+      answer1,
+      answer2,
+      err
+    });
+    await newEquation.save();
+    res.status(201).json(newEquation);
   } catch (error) {
-      console.error('Error saving equation:', error); 
-      res.status(500).json({ message: 'Failed to save equation', error: error.message });
+    console.error('Error saving equation:', error);
+    res.status(500).json({ message: 'Failed to save equation', error: error.message });
   }
 });
 
@@ -183,32 +161,100 @@ app.post('/api/Add-Diff', async (req, res) => {
 
 app.get('/api/Gauss', async (req, res) => {
   try {
-      const dataFound = await GaussApi.find();
-      console.log(dataFound); 
-      res.send(dataFound);
+    const dataFound = await GaussApi.find();
+    console.log(dataFound);
+    res.send(dataFound);
   } catch (err) {
-      res.status(500).json({ message: err.message });
+    res.status(500).json({ message: err.message });
   }
 });
 
 
 
 app.post('/api/Add-Gauss', async (req, res) => {
-  console.log('Request Body:', req.body); 
-  const { methodType, equation,size,answer,err,table} = req.body;
+  console.log('Request Body:', req.body);
+  const { methodType, equation, size, answer, err, table } = req.body;
   try {
-      const newEquation = new GaussApi({
-          methodType,
-          equation,
-          size,
-          answer,
-          err,
-          table      
-      });
-      await newEquation.save();
-      res.status(201).json(newEquation);
+    const newEquation = new GaussApi({
+      methodType,
+      equation,
+      size,
+      answer,
+      err,
+      table
+    });
+    await newEquation.save();
+    res.status(201).json(newEquation);
   } catch (error) {
-      console.error('Error saving equation:', error); 
-      res.status(500).json({ message: 'Failed to save equation', error: error.message });
+    console.error('Error saving equation:', error);
+    res.status(500).json({ message: 'Failed to save equation', error: error.message });
+  }
+});
+
+
+app.get('/api/Interpolation', async (req, res) => {
+  try {
+    const dataFound = await InterpolationApi.find();
+    console.log(dataFound);
+    res.send(dataFound);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+
+
+app.post('/api/Add-Interpolation', async (req, res) => {
+  console.log('Request Body:', req.body);
+  const { methodType, points, xTarget, answer, n, chart } = req.body;
+  try {
+    const newEquation = new InterpolationApi({
+      methodType,
+      points,
+      xTarget,
+      answer,
+      n,
+      chart
+    });
+    await newEquation.save();
+    res.status(201).json(newEquation);
+  } catch (error) {
+    console.error('Error saving equation:', error);
+    res.status(500).json({ message: 'Failed to save equation', error: error.message });
+  }
+});
+
+
+
+app.get('/api/Regression', async (req, res) => {
+  try {
+    const dataFound = await RegressionApi.find();
+    console.log(dataFound);
+    res.send(dataFound);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+
+
+app.post('/api/Add-Regression', async (req, res) => {
+  console.log('Request Body:', req.body);
+  const { methodType, result, regressionEquation, points, plotData, X1target, X2target } = req.body;
+  try {
+    const newEquation = new RegressionApi({
+      methodType,
+      result,
+      regressionEquation,
+      points,
+      plotData,
+      X1target,
+      X2target
+    });
+    await newEquation.save();
+    res.status(201).json(newEquation);
+  } catch (error) {
+    console.error('Error saving equation:', error);
+    res.status(500).json({ message: 'Failed to save equation', error: error.message });
   }
 });
