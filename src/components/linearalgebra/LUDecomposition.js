@@ -61,11 +61,6 @@ const LU_Decompose = () => {
     const newNumRows = parseInt(event.target.value);
     if (newNumRows >= 1 && newNumRows <= maxMatrixSize) {
       setNumRows(newNumRows);
-      setMatrix(
-        Array.from({ length: newNumRows }, () =>
-          Array.from({ length: newNumRows + 1 }, () => "")
-        )
-      );
     } else {
       alert(`Please enter a number between 1 and ${maxMatrixSize}`);
     }

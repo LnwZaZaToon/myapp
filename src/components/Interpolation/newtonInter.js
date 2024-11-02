@@ -206,12 +206,16 @@ function NewtonInter() {
                             <button type="button" className="calculate" onClick={PostDataBase}>Add Database</button>
                         </div>
                     </div>
-                    <h1>Answer: {result.toFixed(6)}</h1>
+                    <div className="Answer">
+                        <h1>Answer: {result.toFixed(6)}</h1>
+                    </div>
                 </form>
             </div>
             {calculated && (
                 <div className="chart-container">
+                    <div>
                     <Line data={chartData} />
+                    </div>
                 </div>
             )}
         </div>

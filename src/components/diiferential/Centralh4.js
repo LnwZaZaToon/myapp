@@ -179,7 +179,7 @@ function Centralh4() {
                             <button type="button" className="calculate" onClick={PostDataBase}>Add Database</button>
                         </div>
                         <div className='Answer'>
-                            <h2>Answer of Central: {result.toFixed(6)}</h2>
+                            <h2>Answer of Centralh4: {result.toFixed(6)}</h2>
                             <h2>Answer of Exact value: {resultNormal.toFixed(6)}</h2>
                             <h2>Error: {Err.toFixed(6)}%</h2>
                         </div>

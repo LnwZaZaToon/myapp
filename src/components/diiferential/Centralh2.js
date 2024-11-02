@@ -177,7 +177,7 @@ function Centralh2() {
                             <button type="button" className="calculate" onClick={PostDataBase}>Add Database</button>
                         </div>
                         <div className='Answer'>
-                            <h2>Answer of Central Difference: {result.toFixed(6)}</h2>
+                            <h2>Answer of Centralh2: {result.toFixed(6)}</h2>
                             <h2>Exact Value: {resultNormal.toFixed(6)}</h2>
                             <h2>Error: {Err.toFixed(2)}%</h2>
                         </div>

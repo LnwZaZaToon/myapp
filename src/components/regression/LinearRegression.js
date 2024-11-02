@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { lusolve } from "mathjs";
 import { Line } from "react-chartjs-2";
+import './styleRegression.css';
 function LinearRegression() {
   const [X1target, setX1target] = useState(0);
   const [result, setResult] = useState(0);
@@ -260,12 +261,13 @@ function LinearRegression() {
           </div>
         </form>
       </div>
-
-      <div className="table" >
-        {calculated && (
-          <Line data={chartData} options={options} />
-        )}
+      {calculated && (
+      <div className="chart-container" >
+        <div>
+          <Line data={chartData} options={options} />   
+        </div>     
       </div>
+      )}
     </div>
   );
 }

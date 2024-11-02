@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { lusolve } from "mathjs";
 import { Line } from "react-chartjs-2";
-
+import './styleRegression.css';
 function PolynomialRegression() {
   const [X1target, setX1target] = useState(0);
   const [result, setResult] = useState(0);
@@ -64,7 +64,7 @@ function PolynomialRegression() {
 
   const calculate = (e) => {
     e.preventDefault();
-    if (points.length < degree + 1) {
+    if (points.length < degree ) {
       alert("Degree cannot be higher than points - 1");
       return;
     }
@@ -216,7 +216,9 @@ function PolynomialRegression() {
   return (
     <div className="calculator-container">
       <div className="form-container">
-        <h1>Polynomial Regression</h1>
+      <div className="form-title" >
+          <h1 >Polynomial Regression</h1>
+        </div>
         <form>
           <div className="input-controls">
             <input type="number"  placeholder="Number of points" onChange={handlePointCountChange} />
@@ -266,11 +268,13 @@ function PolynomialRegression() {
         </form>
       </div>
 
-      <div className="table" >
-        {calculated && (
-          <Line data={chartData} options={options} />
-        )}
+      {calculated && (
+      <div className="chart-container" >
+        <div>
+          <Line data={chartData} options={options} />   
+        </div>     
       </div>
+      )}
     </div>
   );
 }

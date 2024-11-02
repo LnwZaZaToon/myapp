@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-
+import './styleInterpolation.css';
 function LinearSpline() {
   const [Xtarget, setXtarget] = useState(0);
   const [result, setResult] = useState(0);
@@ -175,7 +175,9 @@ function LinearSpline() {
               <button type="button" className="calculate" onClick={PostDataBase}>Add Database</button>
             </div>
           </div>
-          <h1>Answer: {isNaN(result) ? "Out of Bounds" : result.toFixed(6)}</h1>
+          <div className="Answer">
+          <h1>Answer: {result.toFixed(6)}</h1>
+          </div>
         </form>
       </div>
     </div>

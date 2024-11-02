@@ -1,7 +1,7 @@
 import { useState , useEffect} from "react";
 import { lusolve } from "mathjs";
 import { Line } from "react-chartjs-2";
-
+import './styleRegression.css';
 function MultipleRegression() {
   const [X1target, setX1target] = useState(0);
   const [X2target, setX2target] = useState(0);
@@ -229,7 +229,7 @@ function MultipleRegression() {
     <div className="calculator-container">
       <div className="form-container">
         <div className="form-title">
-          <h1>Linear Regression</h1>
+          <h1>Multiple Linear Regression</h1>
         </div>
         <form onSubmit={Calculate}>
           <div className="inputPoint">
@@ -281,16 +281,19 @@ function MultipleRegression() {
               <button type="button" className="calculate" onClick={PostDataBase}>Add Database</button>
             </div>
           </div>
+          <div className="Answer">
           <h1>Predicted Value: {result.toFixed(6)}</h1>
           <h2>Regression Equation: {regressionEquation}</h2>
+          </div>
         </form>
-
-        <div className="table">
-          {calculated && (
-            <Line data={chartData} options={options} />
-          )}
-        </div>
       </div>
+      {calculated && (
+      <div className="chart-container" >
+        <div>
+          <Line data={chartData} options={options} />   
+        </div>     
+      </div>
+      )}
     </div>
   );
 }

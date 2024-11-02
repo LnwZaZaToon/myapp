@@ -63,12 +63,6 @@ const MatrixInversion = () => {
         const newNumRows = parseInt(event.target.value);
         if (newNumRows >= 1 && newNumRows <= maxMatrixSize) {
             setNumRows(newNumRows);
-            setMatrix(
-                Array.from({ length: newNumRows }, () =>
-                    Array.from({ length: newNumRows + 1 }, () => "")
-                )
-            );
-            setCalculated(false); // Reset calculated state on row change
         } else {
             alert(`Please enter a number between 1 and ${maxMatrixSize}`);
         }
@@ -83,45 +77,52 @@ const MatrixInversion = () => {
     const handleCalculate = () => {
         const A = matrix.map(row => row.slice(0, -1).map(value => parseFloat(value)));
         const B = matrix.map(row => parseFloat(row[row.length - 1]));
-        let L = Array.from({ length: A.length }, (_, i) =>
-            Array.from({ length: A.length }, (_, j) => (i === j ? 1 : 0))
-        );
-        let U = A.map(row => [...row]);
-
-        // Gaussian elimination to form L and U
-        for (let i = 0; i < A.length; i++) {
-            for (let j = i + 1; j < A.length; j++) {
-                L[j][i] = U[j][i] / U[i][i];
-                for (let k = i; k < A.length; k++) {
-                    U[j][k] -= L[j][i] * U[i][k];
+        const n = A.length;
+    
+        // Step 1: Create an augmented matrix [A | I]
+        let augmentedMatrix = A.map((row, i) => [
+            ...row,
+            ...Array.from({ length: n }, (_, j) => (i === j ? 1 : 0))
+        ]);
+    
+        // Step 2: Apply Gaussian elimination to transform [A | I] to [I | A^-1]
+        for (let i = 0; i < n; i++) {
+            // Make the diagonal element 1
+            let diagElement = augmentedMatrix[i][i];
+            if (diagElement === 0) {
+                console.error("Matrix is singular and cannot be inverted.");
+                return; // Exit if matrix is singular
+            }
+            for (let j = 0; j < 2 * n; j++) {
+                augmentedMatrix[i][j] /= diagElement;
+            }
+    
+            // Make the other elements in the current column 0
+            for (let k = 0; k < n; k++) {
+                if (k !== i) {
+                    let factor = augmentedMatrix[k][i];
+                    for (let j = 0; j < 2 * n; j++) {
+                        augmentedMatrix[k][j] -= factor * augmentedMatrix[i][j];
+                    }
                 }
             }
         }
-
-        // Solve Ly = B
-        let Y = [];
-        for (let i = 0; i < A.length; i++) {
-            Y[i] = B[i];
-            for (let j = 0; j < i; j++) {
-                Y[i] -= L[i][j] * Y[j];
+    
+        // Step 3: Extract A^-1 from the augmented matrix
+        const inverseA = augmentedMatrix.map(row => row.slice(n, 2 * n));
+    
+        // Step 4: Multiply A^-1 by B to get the solution X
+        let resultX = Array(n).fill(0);
+        for (let i = 0; i < n; i++) {
+            for (let j = 0; j < n; j++) {
+                resultX[i] += inverseA[i][j] * B[j];
             }
-            Y[i] /= L[i][i];
         }
-
-        // Solve Ux = Y
-        let resultX = [];
-        for (let i = A.length - 1; i >= 0; i--) {
-            resultX[i] = Y[i];
-            for (let j = i + 1; j < A.length; j++) {
-                resultX[i] -= U[i][j] * resultX[j];
-            }
-            resultX[i] /= U[i][i];
-        }
-
+    
         setResult(resultX);
         setCalculated(true);
     };
-
+    
     const renderTable = () => {
         const rows = [];
         for (let i = 0; i < numRows; i++) {

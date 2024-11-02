@@ -178,7 +178,7 @@ function Backwardh() {
                             <button type="button" className="calculate" onClick={PostDataBase}>Add Database</button>
                         </div>
                         <div className='Answer'>
-                            <h2>Answer of Backward Difference: {result.toFixed(6)}</h2>
+                            <h2>Answer of Backwardh: {result.toFixed(6)}</h2>
                             <h2>Exact Value: {resultNormal.toFixed(6)}</h2>
                             <h2>Error: {Err.toFixed(2)}%</h2>
                         </div>

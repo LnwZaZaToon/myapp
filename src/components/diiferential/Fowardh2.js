@@ -182,7 +182,7 @@ function Fowardh2() {
                             <button type="button" className="calculate" onClick={PostDataBase}>Add Database</button>
                         </div>
                         <div className='Answer'>
-                            <h2>Answer of Foward {result.toFixed(5)}</h2>
+                            <h2>Answer of Fowardh2 {result.toFixed(5)}</h2>
                             <h2>Answer of Exact value {resultNormal.toFixed(5)}</h2>
                             <h2>Error {Err.toFixed(5)}%</h2>
                         </div>

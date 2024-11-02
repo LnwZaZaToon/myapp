@@ -13,6 +13,9 @@ function WebPage() {
     <div className="OutHeader">
       <div className="InHeader">
         <div className="navBar">
+        <div className="dropdown">
+        <NavLink to="/" onClick={() => handleReload('/')}>Home</NavLink>
+          </div>
           <div className="dropdown">
             <a href="#"><li>Root of equation</li></a>
             <div className="dropdown-content">

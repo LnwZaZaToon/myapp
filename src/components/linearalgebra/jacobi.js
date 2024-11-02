@@ -62,13 +62,6 @@ const JacobiMethod = () => {
 
     if (newNumRows >= 2 && newNumRows <= maxMatrixSize) {
       setNumRows(newNumRows);
-      setMatrix(
-        Array.from({ length: newNumRows }, () =>
-          Array.from({ length: newNumRows + 1 }, () => "")
-        )
-      );
-      setShowMatrix(false); // Hide matrix until generated
-      setIterations([]); // Reset iterations when number of rows changes
     } else {
       alert(`Please enter a number between 2 and ${maxMatrixSize}`);
     }

@@ -5,7 +5,7 @@ const GaussSeidel = () => {
   const [numRows, setNumRows] = useState(2);
   const [matrix, setMatrix] = useState([]);
   const [result, setResult] = useState([]);
-  const [iterations, setIterations] = useState([]); // New state for iteration data
+  const [iterations, setIterations] = useState([]); 
   const [showMatrix, setShowMatrix] = useState(false);
   const [calculated, setCalculated] = useState(false);
   const [data, setData] = useState([]);
@@ -61,12 +61,6 @@ const GaussSeidel = () => {
     const newNumRows = parseInt(event.target.value);
     if (newNumRows >= 2 && newNumRows <= maxMatrixSize) {
       setNumRows(newNumRows);
-      setMatrix(Array.from({ length: newNumRows }, () =>
-        Array.from({ length: newNumRows + 1 }, () => "")
-      ));
-      setShowMatrix(false);
-      setCalculated(false); // Reset calculated state
-      setIterations([]); // Reset iterations state
     } else {
       alert(`Please enter a number between 2 and ${maxMatrixSize}`);
     }

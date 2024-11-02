@@ -161,7 +161,7 @@ function CompositeSimpson() {
                 <form onSubmit={Calculate}>
                     <div className="form-container">
                         <div className="form-title" >
-                            <h1 >Bisection Method Calculator</h1>
+                            <h1 >CompositeSimpson Method Calculator</h1>
                         </div>
                         <div className='FormContainer'>
                             <input type='text' step="any" value={Func} onChange={handleFunc} placeholder='Input function' />
